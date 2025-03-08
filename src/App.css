@@ -18,6 +18,28 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+/* .nav-bar-buttons ul {
+  display: inline-block;
+  margin: 1rem;
+  padding: 1rem;
+  border: solid darkblue 2px;
+  border-radius: 1.3rem;
+  You can also add some margins here to make it look prettier
+} */
+
+.nav-bar-buttons li {
+  display: inline-block;
+  margin: 0.5rem;
+  padding: 0.5rem;
+  font-size: x-large;
+  border: solid darkblue 3px;
+  border-radius: 1.3rem;
+}
+
+.nav-bar-buttons li:hover {
+  background-color: lightpink;
+}
+
 @keyframes logo-spin {
   from {
     transform: rotate(0deg);
