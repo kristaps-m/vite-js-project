@@ -4,24 +4,66 @@ interface IToDo {
   job: string;
 }
 
+// localStorage.setItem("xList", "");
+function modifyLocalStorage(theList: IToDo[], j: string) {
+  // localStorage.setItem("xList", [...theList.map((x) => `${x?.job}`)]);
+  let yolo = theList;
+  yolo.push({ job: j });
+  const joinedList = [...yolo.map((x) => `${x?.job}`)].join(",");
+  localStorage.setItem("xList", joinedList);
+}
+
+// function removeFromLocalStorage() {
+//   localStorage.removeItem("xList");
+// }
+
+// function bigX(params: string): IToDo {
+//   return { job: params };
+// }
+
 function ToDoApp() {
-  const [xList, setXList] = useState<IToDo[]>([{ job: "Nopirkt sieru!" }]);
+  // const listFromLocalStorage = localStorage.getItem("xList")?.split(",");
+  const [xList, setXList] = useState<IToDo[]>([]); // { job: "Nopirkt sieru!" }
+  // if (listFromLocalStorage) {
+  //   setXList([...listFromLocalStorage.map((x) => bigX(x))]);
+  // }
+  // console.log([...listFromLocalStorage]);
+  // console.log(listFromLocalStorage);
   const [textInInput, setTextInInput] = useState<string>();
+  const [textToBeEdited, setTextToBeEdited] = useState<string>();
+
   function handleAdd(j: string | undefined) {
     if (j) {
       if (j.length >= 3) {
         setXList([...xList, { job: j }]);
+        modifyLocalStorage(xList, j);
+        // let yolo = xList;
+        // yolo.push({ job: j });
+        // const joinedList = [...yolo.map((x) => `${x?.job}`)].join(",");
+        // localStorage.setItem("xList", joinedList);
       }
     }
     console.log(j);
   }
-
+  // console.log(localStorage.getItem("xList"));
   function handleDeleteJob(index: number) {
-    // let oldList = xList.splice(index, 1);
     const isDeleting = confirm(`Do you want to Delete - ${index} -?`);
     if (isDeleting) {
       xList.splice(index, 1);
       setXList([...xList]);
+      localStorage.setItem("xList", [...xList.map((x) => `${x?.job}`)]);
+    }
+  }
+
+  function handleEditJob(index: number, newValue: string | undefined) {
+    const areYouSureToEdit = confirm(`Do you want to EDIT - ${index} -?`);
+    if (areYouSureToEdit) {
+      if (newValue && index >= 0) {
+        xList.splice(index, 1, { job: newValue });
+        setXList([...xList]);
+        localStorage.setItem("xList", [...xList.map((x) => `${x?.job}`)]);
+        // modifyLocalStorage(xList, newValue);
+      }
     }
   }
 
@@ -46,7 +88,7 @@ function ToDoApp() {
         >
           Print List
         </button>
-        <button>Cancel</button>
+        <button onClick={() => localStorage.removeItem("xList")}>Cancel</button>
         {xList.map((x, index) => {
           return (
             <div key={index}>
@@ -54,6 +96,13 @@ function ToDoApp() {
                 <p style={{ display: "inline-block", margin: "0.5rem" }}>{index}</p>
                 <p style={{ display: "inline-block", margin: "0.5rem" }}>{x?.job}</p>
                 <button onClick={() => handleDeleteJob(index)}>Delete</button>
+                <input
+                  type="text"
+                  style={{ width: "auto" }}
+                  defaultValue={x?.job}
+                  onChange={(x) => setTextToBeEdited(x.target.value)}
+                />
+                <button onClick={() => handleEditJob(index, textToBeEdited)}>Edit</button>
               </div>
             </div>
           );
