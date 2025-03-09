@@ -18,15 +18,6 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
-/* .nav-bar-buttons ul {
-  display: inline-block;
-  margin: 1rem;
-  padding: 1rem;
-  border: solid darkblue 2px;
-  border-radius: 1.3rem;
-  You can also add some margins here to make it look prettier
-} */
-
 .nav-bar-buttons li {
   display: inline-block;
   margin: 0.5rem;
@@ -36,8 +27,31 @@
   border-radius: 1.3rem;
 }
 
-.nav-bar-buttons li:hover {
+.nav-bar-buttons a:hover {
   background-color: lightpink;
+  border-radius: 1.3rem;
+  color: black;
+}
+
+.toDoColums div {
+  display: inline-block;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  /* columns: 3; */
+  /* column-gap: 10rem; */
+  /* background-color: rgb(209, 209, 209); */
+}
+
+.toDo {
+  background-color: rgb(226, 191, 191);
+}
+
+.inProgress {
+  background-color: rgb(209, 209, 209);
+}
+
+.Done {
+  background-color: rgb(180, 208, 186);
 }
 
 @keyframes logo-spin {
