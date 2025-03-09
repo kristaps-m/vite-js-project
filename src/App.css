@@ -18,6 +18,22 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
+.navbar {
+  position: fixed; /* Fixed at the top */
+  top: 0; /* Stick to the top */
+  left: 0;
+  width: 100%; /* Full width */
+  background-color: #d1ccff; /* Dark background */
+  color: white;
+  padding: 10px 0;
+  text-align: center;
+  z-index: 1000; /* Ensure it's above other elements */
+}
+
+.content {
+  padding-top: 60px; /* Push content down to prevent overlap */
+}
+
 .nav-bar-buttons li {
   display: inline-block;
   margin: 0.5rem;
@@ -40,6 +56,16 @@
   /* columns: 3; */
   /* column-gap: 10rem; */
   /* background-color: rgb(209, 209, 209); */
+}
+
+button {
+  border-radius: 1rem;
+  background-color: lightyellow;
+}
+
+button:hover {
+  background-color: yellowgreen;
+  color: white;
 }
 
 .toDo {
