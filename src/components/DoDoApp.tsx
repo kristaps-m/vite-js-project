@@ -1,36 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TaskList from "./TaskList";
 import { IToDo } from "../interfaces/IToDo";
 
-function modifyLocalStorage(theList: IToDo[], j: string) {
-  // localStorage.setItem("xList", [...theList.map((x) => `${x?.job}`)]);
-  const tempList = theList;
-  tempList.push({ job: j });
-  const joinedList = [...tempList.map((x) => `${x?.job}`)].join(",");
-  localStorage.setItem("xList", joinedList);
-}
-
-// function removeFromLocalStorage() {
-//   localStorage.removeItem("xList");
-// }
-
-// function bigX(params: string): IToDo {
-//   return { job: params };
-// }
-
 function ToDoApp() {
-  // const listFromLocalStorage = localStorage.getItem("xList")?.split(",");
-  const [tasks, setTasks] = useState<IToDo[]>([]);
-  const theToDoList = tasks.filter((task) => task.status === "todo");
-  // if (listFromLocalStorage) {
-  //   setXList([...listFromLocalStorage.map((x) => bigX(x))]);
-  // }
+  const [tasks, setTasks] = useState<IToDo[]>(() => {
+    const savedTasks = localStorage.getItem("tasks");
+    return savedTasks ? JSON.parse(savedTasks) : []; // Ensure it's an array
+  });
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
   function handleAdd(j: string | undefined) {
     const newJobText = j ? j : "";
 
-    setTasks([...theToDoList, { id: crypto.randomUUID(), job: newJobText, status: "todo" }]);
-    modifyLocalStorage(theToDoList, newJobText);
+    setTasks([...tasks, { id: crypto.randomUUID(), job: newJobText, status: "todo" }]);
   }
 
   const handleDeleteJob = (id: string) => {
@@ -65,9 +49,22 @@ function ToDoApp() {
       >
         New Task
       </button>
+      <button
+        onClick={() => {
+          console.log(tasks);
+        }}
+      >
+        Print Tasks
+      </button>
+      <button
+        onClick={() => {
+          localStorage.removeItem("tasks");
+        }}
+      >
+        DEL localStorage
+      </button>
       <h1>To Do App</h1>
       <div>
-        {/* <button onClick={() => localStorage.removeItem("xList")}>Cancel</button> */}
         <div style={{ display: "flex", gap: "2.5rem" }}>
           <TaskList
             tasks={tasks.filter((t) => t.status === "todo")}
