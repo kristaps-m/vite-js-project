@@ -25,17 +25,12 @@ function ToDoApp() {
   // if (listFromLocalStorage) {
   //   setXList([...listFromLocalStorage.map((x) => bigX(x))]);
   // }
-  const [textInInput, setTextInInput] = useState<string>();
 
   function handleAdd(j: string | undefined) {
     const newJobText = j ? j : "";
-    // if (!j) {
-    // if (j.length >= 3) {
+
     setTasks([...theToDoList, { id: crypto.randomUUID(), job: newJobText, status: "todo" }]);
     modifyLocalStorage(theToDoList, newJobText);
-    // }
-    // }
-    console.log(j);
   }
 
   const handleDeleteJob = (id: string) => {
@@ -61,35 +56,19 @@ function ToDoApp() {
   };
 
   return (
-    <>
-      <h1>To Do App</h1>
+    <div>
       <button
         onClick={() => {
           handleAdd("");
         }}
+        style={{ float: "right" }}
       >
         New Task
       </button>
+      <h1>To Do App</h1>
       <div>
-        {/* <input type="text" onChange={(x) => setTextInInput(x.target.value)} />
-        <p>t= {textInInput}</p>
-        <br />
-        <button
-          onClick={() => {
-            handleAdd(textInInput);
-          }}
-        >
-          Add
-        </button>
-        <button
-          onClick={() => {
-            console.log(theToDoList);
-          }}
-        >
-          Print List
-        </button>
-        <button onClick={() => localStorage.removeItem("xList")}>Cancel</button> */}
-        <div style={{ display: "flex", gap: "20px" }}>
+        {/* <button onClick={() => localStorage.removeItem("xList")}>Cancel</button> */}
+        <div style={{ display: "flex", gap: "2.5rem" }}>
           <TaskList
             tasks={tasks.filter((t) => t.status === "todo")}
             status="todo"
@@ -116,7 +95,7 @@ function ToDoApp() {
           />
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

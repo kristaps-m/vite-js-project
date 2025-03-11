@@ -20,12 +20,13 @@ const Task: React.FC<TaskProps> = ({ task, handleDeleteJob, handleEditJob }) => 
     <div
       ref={drag}
       style={{
-        display: "flex",
+        display: "block",
+        textAlign: "center",
         alignItems: "center",
-        backgroundColor: task?.status === "done" && "gray",
+        backgroundColor: task?.status === "done" ? "gray" : "white",
         color: task?.status === "done" && "white",
         fontWeight: "bold",
-        gap: "10px",
+        // gap: "10px",
         opacity: isDragging ? 0.5 : 1,
         padding: "10px",
         margin: "5px",
@@ -34,9 +35,9 @@ const Task: React.FC<TaskProps> = ({ task, handleDeleteJob, handleEditJob }) => 
         cursor: "grab",
       }}
     >
-      <span>{task?.job.length === 0 ? "New Task" : task?.job}</span>
+      <span style={{ marginRight: "1rem" }}>{task?.job.length === 0 ? "New Task" : task?.job}</span>
       <button onClick={() => handleDeleteJob(task?.id)}>Delete</button>
-      <button onClick={() => handleEditJob(task.id, prompt("Edit task", task.job) || task.job)}>
+      <button onClick={() => handleEditJob(task?.id, prompt("Edit task", task?.job) || task.job)}>
         Edit
       </button>
     </div>
