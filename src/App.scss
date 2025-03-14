@@ -1,7 +1,12 @@
+@import "../src/styles/theme-variables.scss";
+
 body {
   /* background-color: rgb(252, 211, 241); */
   /* background-color: #7ceab1;  */
-  background: linear-gradient(to bottom, #7ceab1 30%, white 30%);
+  @include themify($themes) {
+    background: themed("headerFooterBackground");
+  }
+  // background: linear-gradient(to bottom, #7ceab1 30%, white 30%);
   height: 100vh;
   margin: 0;
 }
@@ -31,7 +36,8 @@ body {
   top: 0; /* Stick to the top */
   left: 0;
   width: 100%; /* Full width */
-  background-color: #7ceab1;
+  background-color: "red"; // #7ceab1;
+
   color: white;
   padding: 10px 0;
   text-align: center;

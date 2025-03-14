@@ -1,5 +1,7 @@
-import "../App.css";
+import "../App.scss";
 import { Link } from "react-router-dom";
+import "../styles/theme-variables.scss";
+import Header from "./header";
 
 function Navbar() {
   return (
@@ -10,6 +12,9 @@ function Navbar() {
         </li>
         <li>
           <Link to="/ToDoApp">To-Do App</Link>
+        </li>
+        <li>
+          <Header />
         </li>
       </ul>
     </nav>
