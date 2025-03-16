@@ -4,11 +4,14 @@ import "./index.css";
 import App from "./App.tsx";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { ThemeProvider } from "./theme/ThemeContext";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <DndProvider backend={HTML5Backend}>
-      <App />
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
     </DndProvider>
   </StrictMode>
 );

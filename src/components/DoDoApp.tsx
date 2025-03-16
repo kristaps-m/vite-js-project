@@ -49,20 +49,21 @@ function ToDoApp() {
       >
         New Task
       </button>
-      <button
+      {/* PRINT TASKS FOR TESTING */}
+      {/* <button
         onClick={() => {
           console.log(tasks);
         }}
       >
         Print Tasks
-      </button>
-      <button
+      </button> */}
+      {/* <button
         onClick={() => {
           localStorage.removeItem("tasks");
         }}
       >
         DEL localStorage
-      </button>
+      </button> */}
       <h1>To Do App</h1>
       <div>
         <div style={{ display: "flex", gap: "2.5rem" }}>
