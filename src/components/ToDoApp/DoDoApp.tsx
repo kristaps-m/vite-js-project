@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import TaskList from "./TaskList";
-import { IToDo } from "../interfaces/IToDo";
+import { IToDo } from "../../interfaces/IToDo";
 
 function ToDoApp() {
   const [tasks, setTasks] = useState<IToDo[]>(() => {

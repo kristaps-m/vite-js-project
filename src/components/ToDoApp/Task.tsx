@@ -1,5 +1,5 @@
 import { useDrag } from "react-dnd";
-import { IToDo } from "../interfaces/IToDo";
+import { IToDo } from "../../interfaces/IToDo";
 
 interface TaskProps {
   task: IToDo;

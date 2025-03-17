@@ -1,6 +1,6 @@
 import { useDrop } from "react-dnd";
 import Task from "./Task";
-import { IToDo } from "../interfaces/IToDo";
+import { IToDo } from "../../interfaces/IToDo";
 
 interface ListProps {
   tasks: IToDo[];

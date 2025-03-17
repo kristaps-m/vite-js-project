@@ -1,81 +1,14 @@
-import { useEffect, useState } from "react";
-
-interface IFieldSize {
-  w: number;
-  h: number;
-}
-
-interface IGameDiv {
-  theValue: number;
-  isOpened: boolean;
-  isGuessed: boolean;
-}
-class GameDiv implements IGameDiv {
-  constructor(theValue, isOpened, isGuessed) {
-    this.theValue = theValue;
-    this.isOpened = isOpened;
-    this.isGuessed = isGuessed;
-  }
-  theValue: number;
-  isOpened: boolean;
-  isGuessed: boolean;
-}
-// const gameFieldBackEnd: number[][] = [
-//   [1, 1, 2, 2, 11],
-//   [3, 3, 4, 4, 11],
-//   [5, 5, 6, 6, 12],
-//   [7, 7, 8, 8, 12],
-//   [9, 9, 10, 10, 99],
-// ];
-// {theValue:1, isOpened:false, isGuessed:false}
-const gameFieldBackEnd: IGameDiv[][] = [
-  [
-    new GameDiv(1, false, false),
-    new GameDiv(1, false, false),
-    new GameDiv(2, false, false),
-    new GameDiv(2, false, false),
-    new GameDiv(11, false, false),
-  ],
-  [
-    new GameDiv(3, false, false),
-    new GameDiv(3, false, false),
-    new GameDiv(4, false, false),
-    new GameDiv(4, false, false),
-    new GameDiv(11, false, false),
-  ],
-  [
-    new GameDiv(5, false, false),
-    new GameDiv(5, false, false),
-    new GameDiv(6, false, false),
-    new GameDiv(6, false, false),
-    new GameDiv(12, false, false),
-  ],
-  [
-    new GameDiv(7, false, false),
-    new GameDiv(7, false, false),
-    new GameDiv(8, false, false),
-    new GameDiv(8, false, false),
-    new GameDiv(12, false, false),
-  ],
-  [
-    new GameDiv(9, false, false),
-    new GameDiv(9, false, false),
-    new GameDiv(10, false, false),
-    new GameDiv(10, false, false),
-    new GameDiv(9999, false, false),
-  ],
-];
+import { useState, Dispatch, SetStateAction } from "react";
+import TheTimer from "./TheTimer";
+import { IGameDiv } from "../../interfaces/IGameDiv";
+import { IFieldSize } from "../../interfaces/IFieldSize";
+import { gameFieldBackEnd } from "./GameDiv";
 
 const CardMemoryGame = () => {
   const [fieldSize, setFieldSize] = useState<IFieldSize>({ w: 5, h: 5 });
   const [selectedSize, setSelectedSize] = useState<number>(5); // Temporary selection
-  // const [sCells, setSCells] = useState<number[]>([]);
   const [realGameFieldBackEnd, setRealGameFieldBackEnd] = useState<IGameDiv[][]>(gameFieldBackEnd);
-
-  // useEffect(() => {
-  //   // console.log(realGameFieldBackEnd);
-  //   handleSomethingWithList(realGameFieldBackEnd, fieldSize, setRealGameFieldBackEnd);
-  // }, []);
+  const [isMachedPair, setIsMachedPair] = useState<string>("Hey try to find a matching pair!");
 
   const handleDifficultyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedSize(parseInt(e.target.value));
@@ -84,17 +17,10 @@ const CardMemoryGame = () => {
   const handleConfirm = (e: React.FormEvent) => {
     e.preventDefault(); // Prevents the page from reloading
     setFieldSize({ w: selectedSize, h: selectedSize }); // Apply selected size on confirm
-    console.log("Selected field size:", fieldSize);
   };
 
-  // const toggleOneDivChange: (id: string) => void = (id: string) => {
-  //   const d = document.getElementById(id);
-  //   // d.textContent = `${Math.random()}`.slice(2, 7);
-  //   console.log(id, id.split("-"));
-  //   const theH = parseInt(id.split("-")[0]);
-  //   const theW = parseInt(id.split("-")[1]);
-  //   d.textContent = `${gameFieldBackEnd[theH][theW]}`;
-  // };
+  //  FOR TIMER
+  const [isTimeStarted, setToggleTimeStartOrStop] = useState(false);
 
   return (
     <>
@@ -106,6 +32,11 @@ const CardMemoryGame = () => {
       >
         Print Field
       </button>
+      <button onClick={() => setToggleTimeStartOrStop(true)}>Start</button>
+      <button onClick={() => setToggleTimeStartOrStop(false)}>Stop</button>
+
+      <TheTimer isTimeStarted={isTimeStarted} />
+      <h3>--{isMachedPair}--</h3>
       <form onSubmit={handleConfirm}>
         <label htmlFor="gameDifficulty">Choose a Difficulty:</label>
         <select
@@ -120,12 +51,7 @@ const CardMemoryGame = () => {
         </select>
         <button type="submit">Confirm</button>
       </form>
-      {gameField(
-        fieldSize,
-        //  toggleOneDivChange,
-        setRealGameFieldBackEnd,
-        realGameFieldBackEnd
-      )}
+      {gameField(fieldSize, setRealGameFieldBackEnd, realGameFieldBackEnd, setIsMachedPair)}
     </>
   );
 };
@@ -134,35 +60,18 @@ export default CardMemoryGame;
 
 function gameField(
   size: IFieldSize,
-  // toggleOneDivChange: (id: string) => void,
-  setRealGameFieldBackEnd,
-  fieldList: IGameDiv[][]
+  setRealGameFieldBackEnd: Dispatch<SetStateAction<IGameDiv[][]>>,
+  fieldList: IGameDiv[][],
+  setIsMachedPair: Dispatch<SetStateAction<string>>
 ) {
-  // console.log(fieldList);
-  // let tempNumbersColector = [];
-  // const handleSetSCells = () => {
-  //   if (tempNumbersColector.length === 2) {
-  //     setSCells(tempNumbersColector);
-  //     console.log(tempNumbersColector);
-  //     tempNumbersColector = [];
-  //   }
-  // };
-  function handleEditGameDiv(id: string) {
-    const theH = parseInt(id.split("-")[0]);
-    const theW = parseInt(id.split("-")[1]);
-    const tempList = [...fieldList];
-    tempList[theH][theW].isOpened = true;
-    setRealGameFieldBackEnd([...tempList]);
-  }
-
-  const containerStyle = {
+  const containerStyle: React.CSSProperties = {
     display: "grid",
     gridTemplateColumns: "auto ".repeat(size.w),
     backgroundColor: "dodgerblue",
     padding: "10px",
   };
 
-  const divStyle = {
+  const divStyle: React.CSSProperties = {
     backgroundColor: "#f1f1f1",
     border: "1px solid black",
     padding: "10px",
@@ -177,24 +86,18 @@ function gameField(
           style={divStyle}
           key={`${theHeight}-${theWidth}`}
           onClick={() => {
-            // toggleOneDivChange(`${theHeight}-${theWidth}`);
-            // setSCells([]);
-            // tempNumbersColector.push(gameFieldBackEnd[theHeight][theWidth]);
-            // handleSetSCells;
-            // handleEditGameDiv(`${theHeight}-${theWidth}`);
             handleSomethingWithList(
               fieldList,
               size,
               setRealGameFieldBackEnd,
-              `${theHeight}-${theWidth}`
+              `${theHeight}-${theWidth}`,
+              setIsMachedPair
             );
 
-            console.log(`clicked <div> ${theHeight}-${theWidth}`);
+            // console.log(`clicked <div> ${theHeight}-${theWidth}`);
           }}
           id={`${theHeight}-${theWidth}`}
         >
-          {/* {theHeight}-{theWidth} */}
-          {/* {gameFieldBackEnd[theHeight][theWidth]} */}
           {fieldList[theHeight][theWidth].isOpened ? fieldList[theHeight][theWidth].theValue : "?"}
         </div>
       );
@@ -212,10 +115,10 @@ function gameField(
 function handleSomethingWithList(
   l: IGameDiv[][],
   size: IFieldSize,
-  setRealGameFieldBackEnd,
-  id: string
+  setRealGameFieldBackEnd: Dispatch<SetStateAction<IGameDiv[][]>>,
+  id: string,
+  setIsMachedPair: Dispatch<SetStateAction<string>>
 ) {
-  // console.log(l, size, id);
   const theH = parseInt(id.split("-")[0]);
   const theW = parseInt(id.split("-")[1]);
   const tempList = [...l];
@@ -248,11 +151,14 @@ function handleSomethingWithList(
         tempField[openedCells.hb][openedCells.wb].isGuessed = true;
         tempField[openedCells.ha][openedCells.wa].isOpened = true;
         tempField[openedCells.hb][openedCells.wb].isOpened = true;
+        setIsMachedPair("You Found A Pair! Congrats!" + `< ${openedCells.a} >`);
         openedCells = { a: 9999, b: 9999, ha: 0, wa: 0, hb: 0, wb: 0 };
         countOpenedCells = 0;
         setRealGameFieldBackEnd([...tempField]);
+        alert("You have found 2 matching Cards!");
       } else if (openedCells.a !== openedCells.b && countOpenedCells !== 1) {
         const tempField = [...l];
+        setIsMachedPair("PAIR NOT FOUND!!!");
         setTimeout(function () {
           if (
             tempField[openedCells.ha][openedCells.wa].isGuessed === false &&
@@ -268,5 +174,5 @@ function handleSomethingWithList(
       }
     }
   }
-  console.log("countOpenedCells", countOpenedCells);
+  // console.log("countOpenedCells", countOpenedCells);
 }

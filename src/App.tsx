@@ -1,10 +1,10 @@
 import "./App.css";
-import ToDoApp from "./components/DoDoApp";
+import ToDoApp from "./components/ToDoApp/DoDoApp";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Home from "./components/Home";
 import Navbar from "./components/Navbar";
 import { useTheme } from "./theme/ThemeContext";
-import CardMemoryGame from "./components/CardMemoryGame";
+import CardMemoryGame from "./components/CardMemoryGame/CardMemoryGame";
 
 function App() {
   const { theme } = useTheme();
