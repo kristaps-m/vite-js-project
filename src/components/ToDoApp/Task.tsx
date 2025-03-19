@@ -1,5 +1,5 @@
 import { useDrag } from "react-dnd";
-import { IToDo } from "../interfaces/IToDo";
+import { IToDo } from "../../interfaces/IToDo";
 
 interface TaskProps {
   task: IToDo;
@@ -24,7 +24,7 @@ const Task: React.FC<TaskProps> = ({ task, handleDeleteJob, handleEditJob }) => 
         textAlign: "center",
         alignItems: "center",
         backgroundColor: task?.status === "done" ? "gray" : "white",
-        color: task?.status === "done" && "white",
+        color: task?.status === "done" ? "white" : "black",
         fontWeight: "bold",
         // gap: "10px",
         opacity: isDragging ? 0.5 : 1,
