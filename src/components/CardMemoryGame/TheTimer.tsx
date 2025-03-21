@@ -21,15 +21,14 @@ function TheTimer({ isTimeStarted: isTimeStarted }: ITimerProps) {
     };
   }, [isTimeStarted]);
 
-  return (
-    <>
-      <h3>{showAmazingTimeHHmmss(timePassed)}</h3>
-    </>
-  );
+  return showAmazingTimeHHmmss(timePassed);
 }
 
 export default TheTimer;
 
 function showAmazingTimeHHmmss(s: number) {
-  return `${new Date(s * 1000).toISOString().substring(11, 19)}`;
+  return {
+    timeString: `${new Date(s * 1000).toISOString().substring(11, 19)}`,
+    realSeconds: s,
+  };
 }

@@ -4,13 +4,23 @@ import { IGameDiv } from "../../interfaces/IGameDiv";
 import { IFieldSize } from "../../interfaces/IFieldSize";
 import { gameFieldBackEnd } from "./GameDiv";
 let countOpenedCells = 0;
-let listOfClickedCell = [];
+let listOfClickedCell: IClickedCell[] = [];
+
+interface IClickedCell {
+  v: number;
+  h: number;
+  w: number;
+  time: number;
+}
 
 const CardMemoryGame = () => {
   const [fieldSize, setFieldSize] = useState<IFieldSize>({ w: 5, h: 5 });
   const [selectedSize, setSelectedSize] = useState<number>(5); // Temporary selection
-  const [realGameFieldBackEnd, setRealGameFieldBackEnd] = useState<IGameDiv[][]>(gameFieldBackEnd);
-  const [isMachedPair, setIsMachedPair] = useState<string>("Hey try to find a matching pair!");
+  const [realGameFieldBackEnd, setRealGameFieldBackEnd] =
+    useState<IGameDiv[][]>(gameFieldBackEnd);
+  const [isMachedPair, setIsMachedPair] = useState<string>(
+    "Hey try to find a matching pair!"
+  );
 
   const handleDifficultyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedSize(parseInt(e.target.value));
@@ -23,6 +33,7 @@ const CardMemoryGame = () => {
 
   //  FOR TIMER
   const [isTimeStarted, setToggleTimeStartOrStop] = useState(false);
+  const timePassed = TheTimer({ isTimeStarted: isTimeStarted }).realSeconds;
 
   return (
     <>
@@ -37,7 +48,9 @@ const CardMemoryGame = () => {
       <button onClick={() => setToggleTimeStartOrStop(true)}>Start</button>
       <button onClick={() => setToggleTimeStartOrStop(false)}>Stop</button>
 
-      <TheTimer isTimeStarted={isTimeStarted} />
+      {/* <TheTimer isTimeStarted={isTimeStarted} /> */}
+      <h3>{TheTimer({ isTimeStarted: isTimeStarted }).timeString}</h3>
+      <h3>TIME PASED = {timePassed}</h3>
       <h3>--{isMachedPair}--</h3>
       <form onSubmit={handleConfirm}>
         <label htmlFor="gameDifficulty">Choose a Difficulty:</label>
@@ -53,7 +66,13 @@ const CardMemoryGame = () => {
         </select>
         <button type="submit">Confirm</button>
       </form>
-      {gameField(fieldSize, setRealGameFieldBackEnd, realGameFieldBackEnd, setIsMachedPair)}
+      {gameField(
+        fieldSize,
+        setRealGameFieldBackEnd,
+        realGameFieldBackEnd,
+        setIsMachedPair,
+        timePassed
+      )}
     </>
   );
 };
@@ -64,7 +83,8 @@ function gameField(
   size: IFieldSize,
   setRealGameFieldBackEnd: Dispatch<SetStateAction<IGameDiv[][]>>,
   fieldList: IGameDiv[][],
-  setIsMachedPair: Dispatch<SetStateAction<string>>
+  setIsMachedPair: Dispatch<SetStateAction<string>>,
+  timeInSec: number
 ) {
   const containerStyle: React.CSSProperties = {
     display: "grid",
@@ -93,14 +113,17 @@ function gameField(
               size,
               setRealGameFieldBackEnd,
               `${theHeight}-${theWidth}`,
-              setIsMachedPair
+              setIsMachedPair,
+              timeInSec
             );
 
             // console.log(`clicked <div> ${theHeight}-${theWidth}`);
           }}
           id={`${theHeight}-${theWidth}`}
         >
-          {fieldList[theHeight][theWidth].isOpened ? fieldList[theHeight][theWidth].theValue : "?"}
+          {fieldList[theHeight][theWidth].isOpened
+            ? fieldList[theHeight][theWidth].theValue
+            : "?"}
         </div>
       );
     }
@@ -119,17 +142,28 @@ function handleSomethingWithList(
   size: IFieldSize,
   setRealGameFieldBackEnd: Dispatch<SetStateAction<IGameDiv[][]>>,
   id: string,
-  setIsMachedPair: Dispatch<SetStateAction<string>>
+  setIsMachedPair: Dispatch<SetStateAction<string>>,
+  timeInSec: number
 ) {
   // condition to allow open?!
-  let clickedCell = { v: -1, h: -1, w: -1 };
+  let clickedCell: IClickedCell = { v: -1, h: -1, w: -1, time: 0 };
+  let canYouResetList = false;
   // let openedCells = { a: 9999, b: 9999, ha: 0, wa: 0, hb: 0, wb: 0 };
   const theH = parseInt(id.split("-")[0]);
   const theW = parseInt(id.split("-")[1]);
-  if (countOpenedCells === 0) {
+  if (
+    countOpenedCells === 0 &&
+    !l[theH][theW].isGuessed &&
+    !l[theH][theW].isOpened
+  ) {
     const tempList = [...l];
     tempList[theH][theW].isOpened = true;
-    clickedCell = { v: tempList[theH][theW].theValue, h: theH, w: theW };
+    clickedCell = {
+      v: tempList[theH][theW].theValue,
+      h: theH,
+      w: theW,
+      time: timeInSec,
+    };
     listOfClickedCell.push(clickedCell);
     setRealGameFieldBackEnd([...tempList]);
     countOpenedCells++;
@@ -137,16 +171,51 @@ function handleSomethingWithList(
   } else if (
     countOpenedCells === 1 &&
     // prevents from clicking same cell as first time!
-    !(listOfClickedCell[0].h === theH && listOfClickedCell[0].w === theW)
+    !(listOfClickedCell[0].h === theH && listOfClickedCell[0].w === theW) &&
+    !l[theH][theW].isGuessed &&
+    !l[theH][theW].isOpened
   ) {
-    console.log("second click!", listOfClickedCell, theH, theW);
     const tempList = [...l];
     tempList[theH][theW].isOpened = true;
-    clickedCell = { v: tempList[theH][theW].theValue, h: theH, w: theW };
+    clickedCell = {
+      v: tempList[theH][theW].theValue,
+      h: theH,
+      w: theW,
+      time: timeInSec,
+    };
     listOfClickedCell.push(clickedCell);
     setRealGameFieldBackEnd([...tempList]);
     countOpenedCells++;
+    console.log("second click!", listOfClickedCell, theH, theW);
+    if (listOfClickedCell[0].v === listOfClickedCell[1].v) {
+      console.log("SAME VALUE");
+      const tempList = [...l];
+      tempList[listOfClickedCell[0].h][listOfClickedCell[0].w].isGuessed = true;
+      tempList[listOfClickedCell[1].h][listOfClickedCell[1].w].isGuessed = true;
+      setRealGameFieldBackEnd([...tempList]);
+    } else {
+      // sleep(2000).then(() => {
+      if (Math.abs(timeInSec - listOfClickedCell[0].time) >= 2) {
+        tempList[listOfClickedCell[0].h][listOfClickedCell[0].w].isOpened =
+          false;
+        tempList[listOfClickedCell[1].h][listOfClickedCell[1].w].isOpened =
+          false;
+        // console.log(11111111111);
+        setRealGameFieldBackEnd([...tempList]);
+      }
+      // canYouResetList = true;
+      // });
+      // setInterval(() => {
+      // }, 2000);
+    }
+    // if (canYouResetList) {
     listOfClickedCell = [];
+    // }
+    // console.log(22222222, "-", listOfClickedCell.length);
+  }
+  if (countOpenedCells >= 2) {
+    countOpenedCells = 0;
+    console.log("cop", countOpenedCells);
   }
   console.log("START - countOpenedCells", countOpenedCells, clickedCell);
 
@@ -202,4 +271,8 @@ function handleSomethingWithList(
   //   }
   // }
   // console.log("countOpenedCells", countOpenedCells);
+
+  function sleep(ms: number) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
 }
