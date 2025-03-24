@@ -2,7 +2,7 @@ import { useState, Dispatch, SetStateAction, useEffect } from "react";
 import TheTimer from "./TheTimer";
 import { IGameDiv } from "../../interfaces/IGameDiv";
 import { IFieldSize } from "../../interfaces/IFieldSize";
-import { gameFieldBackEnd } from "./GameDiv";
+import { generateField } from "./GameDiv";
 import { isGameWon, countOpenedButNotGuessedCells } from "./CardMemoryHelperFunctions";
 let countOpenedCells = 0;
 let listOfClickedCell: IClickedCell[] = [];
@@ -15,8 +15,9 @@ interface IClickedCell {
 
 const CardMemoryGame = () => {
   const [fieldSize, setFieldSize] = useState<IFieldSize>({ w: 5, h: 5 });
+  const game2dList: IGameDiv[][] = generateField(fieldSize.h);
   const [selectedSize, setSelectedSize] = useState<number>(5); // Temporary selection
-  const [realGameFieldBackEnd, setRealGameFieldBackEnd] = useState<IGameDiv[][]>(gameFieldBackEnd);
+  const [realGameFieldBackEnd, setRealGameFieldBackEnd] = useState<IGameDiv[][]>(game2dList);
   const [isMachedPair, setIsMachedPair] = useState<string>("Hey try to find a matching pair!");
 
   const handleDifficultyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -71,10 +72,17 @@ const CardMemoryGame = () => {
       <h1>Card Memory Game</h1>
       <button
         onClick={() => {
-          console.log(gameFieldBackEnd);
+          console.log(realGameFieldBackEnd);
         }}
       >
         Print Field
+      </button>
+      <button
+        onClick={() => {
+          console.log(realGameFieldBackEnd.map((l) => [...l.map((o) => o.theValue)]));
+        }}
+      >
+        Print Field Maped
       </button>
       {/* <button onClick={() => setToggleTimeStartOrStop(true)}>Start</button>
       <button onClick={() => setToggleTimeStartOrStop(false)}>Stop</button> */}
