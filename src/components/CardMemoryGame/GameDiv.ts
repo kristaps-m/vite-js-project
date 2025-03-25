@@ -46,12 +46,6 @@ export function generateField(size: number) {
     if (countValue(size, gameField, startingValue) === 2) {
       startingValue++;
     }
-    // randH = randomInt(0, size);
-    // randW = randomInt(0, size);
-    // if (gameField[randH][randW].theValue === 0) {
-    //   gameField[randH][randW].theValue = startingValue;
-    //   startingValue++;
-    // }
   }
 
   return gameField;

@@ -2,23 +2,18 @@ import { useState, Dispatch, SetStateAction, useEffect } from "react";
 import TheTimer from "./TheTimer";
 import { IGameDiv } from "../../interfaces/IGameDiv";
 import { IFieldSize } from "../../interfaces/IFieldSize";
-import { gameFieldBackEnd, generateField } from "./GameDiv";
+import { gameFieldBackEnd } from "./GameDiv";
 import {
   isGameWon,
   countOpenedButNotGuessedCells,
+  handleSomethingWithList,
 } from "./CardMemoryHelperFunctions";
-let countOpenedCells = 0;
-let listOfClickedCell: IClickedCell[] = [];
-
-interface IClickedCell {
-  v: number;
-  h: number;
-  w: number;
-}
+import { IClickedCell } from "../../interfaces/IClickedCell";
+// let countOpenedCells = 0;
+// let listOfClickedCell: IClickedCell[] = [];
 
 const CardMemoryGame = () => {
   const [fieldSize, setFieldSize] = useState<IFieldSize>({ sideLen: 5 });
-  // const game2dList: IGameDiv[][] = generateField(fieldSize.h);
   const [selectedSize, setSelectedSize] = useState<number>(fieldSize.sideLen); // Temporary selection
   const [realGameFieldBackEnd, setRealGameFieldBackEnd] = useState<
     IGameDiv[][]
@@ -30,30 +25,29 @@ const CardMemoryGame = () => {
   const handleDifficultyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedSize(parseInt(e.target.value));
   };
+  const [countOpenedCells, setCountOpenedCells] = useState(0);
+  const [listOfClickedCell, setListOfClickedCell] = useState<IClickedCell[]>(
+    []
+  );
 
   const handleConfirm = (e: React.FormEvent) => {
     e.preventDefault(); // Prevents the page from reloading
     setCanGameBegin(true);
     setFieldSize({ sideLen: selectedSize }); // Apply selected size on confirm
-    // const game2dList: IGameDiv[][] = generateField(fieldSize.h);
-    // console.log(
-    //   gameFieldBackEnd(selectedSize).length,
-    //   "len in confirm",
-    //   selectedSize,
-    //   "selectedSize"
-    // );
+    setCountOpenedCells(0);
+    setListOfClickedCell([]);
+    setTimePassed(0);
+    setIsMachedPair("Hey try to find a matching pair!");
     setRealGameFieldBackEnd(gameFieldBackEnd(selectedSize));
-    // console.log("fieldSize", fieldSize, realGameFieldBackEnd);
     setToggleTimeStartOrStop(false);
   };
 
   //  FOR TIMER
   const [isTimeStarted, setToggleTimeStartOrStop] = useState<boolean>(false);
-  // const timePassed = TheTimer({ isTimeStarted: isTimeStarted }).realSeconds;
+  const [timePassed, setTimePassed] = useState(0);
 
   useEffect(() => {
     const c = countOpenedButNotGuessedCells(realGameFieldBackEnd, fieldSize);
-    // console.log(`opened Cels :  ${c}`);
     let interval: number;
 
     if (isTimeStarted && c === 2) {
@@ -71,7 +65,7 @@ const CardMemoryGame = () => {
           }
         }
         console.log("Howdy");
-        countOpenedCells = 0;
+        setCountOpenedCells(0);
       }, 3000);
     }
     const isVictory = isGameWon(realGameFieldBackEnd, fieldSize);
@@ -90,7 +84,7 @@ const CardMemoryGame = () => {
     <div
       style={{
         marginTop: `${
-          fieldSize.sideLen < 6 ? 10 : fieldSize.sideLen > 40 ? 200 : 50
+          fieldSize.sideLen < 6 ? 20 : fieldSize.sideLen > 40 ? 220 : 50
         }rem`,
       }}
     >
@@ -111,10 +105,15 @@ const CardMemoryGame = () => {
       >
         Print Field Maped
       </button>
-      {/* <button onClick={() => setToggleTimeStartOrStop(true)}>Start</button>
-      <button onClick={() => setToggleTimeStartOrStop(false)}>Stop</button> */}
-      <h3>{TheTimer({ isTimeStarted: isTimeStarted }).timeString}</h3>
-      {/* <h3>TIME PASED = {timePassed}</h3> */}
+      <h3>
+        {
+          TheTimer({
+            isTimeStarted: isTimeStarted,
+            setTimePassed: setTimePassed,
+            timePassed: timePassed,
+          }).timeString
+        }
+      </h3>
       <h3>--{isMachedPair}--</h3>
       <form onSubmit={handleConfirm}>
         <label htmlFor="gameDifficulty">Choose a Difficulty:</label>
@@ -136,7 +135,11 @@ const CardMemoryGame = () => {
           setRealGameFieldBackEnd,
           realGameFieldBackEnd,
           setIsMachedPair,
-          setToggleTimeStartOrStop
+          setToggleTimeStartOrStop,
+          countOpenedCells,
+          setCountOpenedCells,
+          listOfClickedCell,
+          setListOfClickedCell
         )
       ) : (
         <h1>Select Difficulty</h1>
@@ -152,9 +155,12 @@ function gameField(
   setRealGameFieldBackEnd: Dispatch<SetStateAction<IGameDiv[][]>>,
   fieldList: IGameDiv[][],
   setIsMachedPair: Dispatch<SetStateAction<string>>,
-  setToggleTimeStartOrStop: Dispatch<SetStateAction<boolean>>
+  setToggleTimeStartOrStop: Dispatch<SetStateAction<boolean>>,
+  countOpenedCells: number,
+  setCountOpenedCells: Dispatch<SetStateAction<number>>,
+  listOfClickedCell: IClickedCell[],
+  setListOfClickedCell: Dispatch<SetStateAction<IClickedCell[]>>
 ) {
-  // console.log("size in gameFIeld", size);
   const containerStyle: React.CSSProperties = {
     display: "grid",
     gridTemplateColumns: "auto ".repeat(size.sideLen),
@@ -182,10 +188,12 @@ function gameField(
               setRealGameFieldBackEnd,
               `${theHeight}-${theWidth}`,
               setIsMachedPair,
-              setToggleTimeStartOrStop
+              setToggleTimeStartOrStop,
+              countOpenedCells,
+              setCountOpenedCells,
+              listOfClickedCell,
+              setListOfClickedCell
             );
-
-            // console.log(`clicked <div> ${theHeight}-${theWidth}`);
           }}
           id={`${theHeight}-${theWidth}`}
         >
@@ -203,70 +211,4 @@ function gameField(
       })}
     </div>
   );
-}
-
-function handleSomethingWithList(
-  l: IGameDiv[][],
-  setRealGameFieldBackEnd: Dispatch<SetStateAction<IGameDiv[][]>>,
-  id: string,
-  setIsMachedPair: Dispatch<SetStateAction<string>>,
-  setToggleTimeStartOrStop: Dispatch<SetStateAction<boolean>>
-) {
-  setToggleTimeStartOrStop(true);
-  // condition to allow open?!
-  let clickedCell: IClickedCell = { v: -1, h: -1, w: -1 };
-  // let openedCells = { a: 9999, b: 9999, ha: 0, wa: 0, hb: 0, wb: 0 };
-  const theH = parseInt(id.split("-")[0]);
-  const theW = parseInt(id.split("-")[1]);
-  if (
-    countOpenedCells === 0 &&
-    !l[theH][theW].isGuessed &&
-    !l[theH][theW].isOpened
-  ) {
-    const tempList = [...l];
-    tempList[theH][theW].isOpened = true;
-    clickedCell = {
-      v: tempList[theH][theW].theValue,
-      h: theH,
-      w: theW,
-    };
-    listOfClickedCell.push(clickedCell);
-    setRealGameFieldBackEnd([...tempList]);
-    countOpenedCells++;
-    // console.log(listOfClickedCell);
-  } else if (
-    countOpenedCells === 1 &&
-    // prevents from clicking same cell as first time!
-    !(listOfClickedCell[0].h === theH && listOfClickedCell[0].w === theW) &&
-    !l[theH][theW].isGuessed &&
-    !l[theH][theW].isOpened
-  ) {
-    const tempList = [...l];
-    tempList[theH][theW].isOpened = true;
-    clickedCell = {
-      v: tempList[theH][theW].theValue,
-      h: theH,
-      w: theW,
-    };
-    listOfClickedCell.push(clickedCell);
-    setRealGameFieldBackEnd([...tempList]);
-    countOpenedCells++;
-    // console.log("second click!", listOfClickedCell, theH, theW);
-    if (listOfClickedCell[0].v === listOfClickedCell[1].v) {
-      // console.log("SAME VALUE");
-      const tempList = [...l];
-      tempList[listOfClickedCell[0].h][listOfClickedCell[0].w].isGuessed = true;
-      tempList[listOfClickedCell[1].h][listOfClickedCell[1].w].isGuessed = true;
-      setRealGameFieldBackEnd([...tempList]);
-      setIsMachedPair("You Found A Pair! Congrats!" + `< ${clickedCell.v} >`);
-
-      if (countOpenedCells >= 2) {
-        countOpenedCells = 0;
-        // console.log("cop", countOpenedCells);
-      }
-    }
-    listOfClickedCell = [];
-  }
-
-  // console.log("START - countOpenedCells", countOpenedCells, clickedCell);
 }
