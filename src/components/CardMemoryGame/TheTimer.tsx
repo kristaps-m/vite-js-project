@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 
 interface ITimerProps {
   isTimeStarted: boolean;
@@ -23,7 +23,7 @@ function TheTimer({
     return () => {
       clearInterval(interval);
     };
-  }, [isTimeStarted]);
+  }, [isTimeStarted, setTimePassed]);
 
   return showAmazingTimeHHmmss(timePassed);
 }
