@@ -1,7 +1,11 @@
 import { IGameDiv } from "../../interfaces/IGameDiv";
 
 export class GameDiv implements IGameDiv {
-  constructor(theValue: number = 0, isOpened: boolean = false, isGuessed: boolean = false) {
+  constructor(
+    theValue: number = 0,
+    isOpened: boolean = false,
+    isGuessed: boolean = false
+  ) {
     this.theValue = theValue;
     this.isOpened = isOpened;
     this.isGuessed = isGuessed;
@@ -16,7 +20,7 @@ export class GameDiv implements IGameDiv {
 //   [new GameDiv(3), new GameDiv(3), new GameDiv(4), new GameDiv(4), new GameDiv(11)],
 //   [new GameDiv(5), new GameDiv(5), new GameDiv(6), new GameDiv(6), new GameDiv(12)],
 //   [new GameDiv(7), new GameDiv(7), new GameDiv(8), new GameDiv(8), new GameDiv(12)],
-//   [new GameDiv(9), new GameDiv(9), new GameDiv(10), new GameDiv(10), new GameDiv(-10)],
+//   [new GameDiv(9), new GameDiv(9), new GameDiv(10), new GameDiv(10), new GameDiv(0)],
 // ];
 export const gameFieldBackEnd = (n: number) => generateField(n);
 export function generateField(size: number) {

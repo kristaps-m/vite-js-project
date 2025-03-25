@@ -2,8 +2,11 @@ import { useState, Dispatch, SetStateAction, useEffect } from "react";
 import TheTimer from "./TheTimer";
 import { IGameDiv } from "../../interfaces/IGameDiv";
 import { IFieldSize } from "../../interfaces/IFieldSize";
-import { generateField } from "./GameDiv";
-import { isGameWon, countOpenedButNotGuessedCells } from "./CardMemoryHelperFunctions";
+import { gameFieldBackEnd, generateField } from "./GameDiv";
+import {
+  isGameWon,
+  countOpenedButNotGuessedCells,
+} from "./CardMemoryHelperFunctions";
 let countOpenedCells = 0;
 let listOfClickedCell: IClickedCell[] = [];
 
@@ -14,19 +17,34 @@ interface IClickedCell {
 }
 
 const CardMemoryGame = () => {
-  const [fieldSize, setFieldSize] = useState<IFieldSize>({ w: 5, h: 5 });
-  const game2dList: IGameDiv[][] = generateField(fieldSize.h);
-  const [selectedSize, setSelectedSize] = useState<number>(5); // Temporary selection
-  const [realGameFieldBackEnd, setRealGameFieldBackEnd] = useState<IGameDiv[][]>(game2dList);
-  const [isMachedPair, setIsMachedPair] = useState<string>("Hey try to find a matching pair!");
-
+  const [fieldSize, setFieldSize] = useState<IFieldSize>({ sideLen: 5 });
+  // const game2dList: IGameDiv[][] = generateField(fieldSize.h);
+  const [selectedSize, setSelectedSize] = useState<number>(fieldSize.sideLen); // Temporary selection
+  const [realGameFieldBackEnd, setRealGameFieldBackEnd] = useState<
+    IGameDiv[][]
+  >(gameFieldBackEnd(fieldSize.sideLen));
+  const [isMachedPair, setIsMachedPair] = useState<string>(
+    "Hey try to find a matching pair!"
+  );
+  const [canGameBegin, setCanGameBegin] = useState(false);
   const handleDifficultyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedSize(parseInt(e.target.value));
   };
 
   const handleConfirm = (e: React.FormEvent) => {
     e.preventDefault(); // Prevents the page from reloading
-    setFieldSize({ w: selectedSize, h: selectedSize }); // Apply selected size on confirm
+    setCanGameBegin(true);
+    setFieldSize({ sideLen: selectedSize }); // Apply selected size on confirm
+    // const game2dList: IGameDiv[][] = generateField(fieldSize.h);
+    // console.log(
+    //   gameFieldBackEnd(selectedSize).length,
+    //   "len in confirm",
+    //   selectedSize,
+    //   "selectedSize"
+    // );
+    setRealGameFieldBackEnd(gameFieldBackEnd(selectedSize));
+    // console.log("fieldSize", fieldSize, realGameFieldBackEnd);
+    setToggleTimeStartOrStop(false);
   };
 
   //  FOR TIMER
@@ -42,8 +60,8 @@ const CardMemoryGame = () => {
       setIsMachedPair("PAIR NOT FOUND!!!");
 
       interval = setInterval(() => {
-        for (let theHeight = 0; theHeight < fieldSize.h; theHeight++) {
-          for (let theWidth = 0; theWidth < fieldSize.w; theWidth++) {
+        for (let theHeight = 0; theHeight < fieldSize.sideLen; theHeight++) {
+          for (let theWidth = 0; theWidth < fieldSize.sideLen; theWidth++) {
             if (
               realGameFieldBackEnd[theHeight][theWidth].isOpened &&
               !realGameFieldBackEnd[theHeight][theWidth].isGuessed
@@ -59,6 +77,7 @@ const CardMemoryGame = () => {
     const isVictory = isGameWon(realGameFieldBackEnd, fieldSize);
     if (isVictory) {
       console.log("GAME IS WON CONGRATULATIONS!!!");
+      setIsMachedPair("Hey try to find a matching pair!");
       setToggleTimeStartOrStop(false);
     }
 
@@ -68,7 +87,13 @@ const CardMemoryGame = () => {
   }, [isTimeStarted, realGameFieldBackEnd, fieldSize]);
 
   return (
-    <>
+    <div
+      style={{
+        marginTop: `${
+          fieldSize.sideLen < 6 ? 10 : fieldSize.sideLen > 40 ? 200 : 50
+        }rem`,
+      }}
+    >
       <h1>Card Memory Game</h1>
       <button
         onClick={() => {
@@ -79,7 +104,9 @@ const CardMemoryGame = () => {
       </button>
       <button
         onClick={() => {
-          console.log(realGameFieldBackEnd.map((l) => [...l.map((o) => o.theValue)]));
+          console.log(
+            realGameFieldBackEnd.map((l) => [...l.map((o) => o.theValue)])
+          );
         }}
       >
         Print Field Maped
@@ -99,18 +126,22 @@ const CardMemoryGame = () => {
         >
           <option value="5">5 x 5</option>
           <option value="10">10 x 10</option>
-          {/* <option value="50">50x50</option> */}
+          <option value="50">50x50</option>
         </select>
         <button type="submit">Confirm</button>
       </form>
-      {gameField(
-        fieldSize,
-        setRealGameFieldBackEnd,
-        realGameFieldBackEnd,
-        setIsMachedPair,
-        setToggleTimeStartOrStop
+      {canGameBegin ? (
+        gameField(
+          fieldSize,
+          setRealGameFieldBackEnd,
+          realGameFieldBackEnd,
+          setIsMachedPair,
+          setToggleTimeStartOrStop
+        )
+      ) : (
+        <h1>Select Difficulty</h1>
       )}
-    </>
+    </div>
   );
 };
 
@@ -123,9 +154,10 @@ function gameField(
   setIsMachedPair: Dispatch<SetStateAction<string>>,
   setToggleTimeStartOrStop: Dispatch<SetStateAction<boolean>>
 ) {
+  // console.log("size in gameFIeld", size);
   const containerStyle: React.CSSProperties = {
     display: "grid",
-    gridTemplateColumns: "auto ".repeat(size.w),
+    gridTemplateColumns: "auto ".repeat(size.sideLen),
     backgroundColor: "dodgerblue",
     padding: "10px",
   };
@@ -138,8 +170,8 @@ function gameField(
     textAlign: "center",
   };
   const listOfdivs = [];
-  for (let theHeight = 0; theHeight < size.h; theHeight++) {
-    for (let theWidth = 0; theWidth < size.w; theWidth++) {
+  for (let theHeight = 0; theHeight < size.sideLen; theHeight++) {
+    for (let theWidth = 0; theWidth < size.sideLen; theWidth++) {
       listOfdivs.push(
         <div
           style={divStyle}
@@ -157,7 +189,9 @@ function gameField(
           }}
           id={`${theHeight}-${theWidth}`}
         >
-          {fieldList[theHeight][theWidth].isOpened ? fieldList[theHeight][theWidth].theValue : "?"}
+          {fieldList[theHeight][theWidth].isOpened
+            ? fieldList[theHeight][theWidth].theValue
+            : "?"}
         </div>
       );
     }
@@ -184,7 +218,11 @@ function handleSomethingWithList(
   // let openedCells = { a: 9999, b: 9999, ha: 0, wa: 0, hb: 0, wb: 0 };
   const theH = parseInt(id.split("-")[0]);
   const theW = parseInt(id.split("-")[1]);
-  if (countOpenedCells === 0 && !l[theH][theW].isGuessed && !l[theH][theW].isOpened) {
+  if (
+    countOpenedCells === 0 &&
+    !l[theH][theW].isGuessed &&
+    !l[theH][theW].isOpened
+  ) {
     const tempList = [...l];
     tempList[theH][theW].isOpened = true;
     clickedCell = {
