@@ -2,11 +2,10 @@ import { Dispatch, SetStateAction } from "react";
 import { IFieldSize } from "../../interfaces/IFieldSize";
 import { IGameDiv } from "../../interfaces/IGameDiv";
 import { IClickedCell } from "../../interfaces/IClickedCell";
-import { countOpenedCells } from "./CardMemoryGame";
 
 export function countOpenedButNotGuessedCells(l: IGameDiv[][], size: IFieldSize) {
   let openedCellsCount = 0;
-  // let clickedCell: IClickedCell = { v: -1, h: -1, w: -1, time: 0 };
+  // let clickedCell: IClickedCell = { v: -1, h: -1, w: -1 };
 
   for (let theHeight = 0; theHeight < size.sideLen; theHeight++) {
     for (let theWidth = 0; theWidth < size.sideLen; theWidth++) {
@@ -15,12 +14,13 @@ export function countOpenedButNotGuessedCells(l: IGameDiv[][], size: IFieldSize)
       }
     }
   }
+
   return openedCellsCount;
 }
 
 export function isGameWon(l: IGameDiv[][], size: IFieldSize) {
   let openedAndGuessedCount = 0;
-  // let clickedCell: IClickedCell = { v: -1, h: -1, w: -1, time: 0 };
+  // let clickedCell: IClickedCell = { v: -1, h: -1, w: -1 };
 
   for (let theHeight = 0; theHeight < size.sideLen; theHeight++) {
     for (let theWidth = 0; theWidth < size.sideLen; theWidth++) {
@@ -39,9 +39,9 @@ export function handleSomethingWithList(
   setRealGameFieldBackEnd: Dispatch<SetStateAction<IGameDiv[][]>>,
   id: string,
   setIsMachedPair: Dispatch<SetStateAction<string>>,
-  setToggleTimeStartOrStop: Dispatch<SetStateAction<boolean>>
-  // countOpenedCells: number,
-  // setCountOpenedCells: Dispatch<SetStateAction<number>>,
+  setToggleTimeStartOrStop: Dispatch<SetStateAction<boolean>>,
+  countOpenedCells: number,
+  setCountOpenedCells: Dispatch<SetStateAction<number>>
   // listOfClickedCell: IClickedCell[],
   // setListOfClickedCell: Dispatch<SetStateAction<IClickedCell[]>>
 ) {
@@ -50,7 +50,7 @@ export function handleSomethingWithList(
   let clickedCell: IClickedCell = { v: -1, h: -1, w: -1 };
   const theH = parseInt(id.split("-")[0]);
   const theW = parseInt(id.split("-")[1]);
-  console.log(countOpenedCells, "countOpenedCells Begining");
+  // console.log(countOpenedCells, "countOpenedCells Begining");
   if (countOpenedCells === 0 && !l[theH][theW].isGuessed && !l[theH][theW].isOpened) {
     // const tempList = [...l];
     // tempList[theH][theW].isOpened = true;
@@ -71,15 +71,15 @@ export function handleSomethingWithList(
     setRealGameFieldBackEnd([...l]);
     // console.log("L: l", l);
     // setRealGameFieldBackEnd([...tempList]);
-    // setCountOpenedCells((p) => p + 1);
-    countOpenedCells++;
+    setCountOpenedCells(1);
+    // countOpenedCells++;
     // console.log(countOpenedCells, "countOpenedCells", listOfClickedCell, "listOfClickedCell");
-    console.log(
-      countOpenedCells === 1,
-      !(listOfClickedCell[0].h === theH && listOfClickedCell[0].w === theW),
-      !l[theH][theW].isGuessed,
-      !l[theH][theW].isOpened
-    );
+    // console.log(
+    //   countOpenedCells === 1,
+    //   !(listOfClickedCell[0].h === theH && listOfClickedCell[0].w === theW),
+    //   !l[theH][theW].isGuessed,
+    //   !l[theH][theW].isOpened
+    // );
   } else if (
     countOpenedCells === 1 &&
     // prevents from clicking same cell as first time!
@@ -87,7 +87,7 @@ export function handleSomethingWithList(
     !l[theH][theW].isGuessed &&
     !l[theH][theW].isOpened
   ) {
-    console.log("---------------I am here");
+    // console.log("---------------I am here");
     const tempList = [...l];
     tempList[theH][theW].isOpened = true;
     l[theH][theW].isOpened = true;
@@ -103,8 +103,8 @@ export function handleSomethingWithList(
     // setListOfClickedCell([...listOfClickedCell]);
     // setRealGameFieldBackEnd([...tempList]);
     setRealGameFieldBackEnd([...l]);
-    // setCountOpenedCells((p) => p + 1);
-    countOpenedCells++;
+    setCountOpenedCells(2);
+    // countOpenedCells++;
     // console.log(countOpenedCells, listOfClickedCell);
     if (listOfClickedCell[0].v === listOfClickedCell[1].v) {
       // const tempList = [...l];
@@ -112,17 +112,19 @@ export function handleSomethingWithList(
       l[listOfClickedCell[1].h][listOfClickedCell[1].w].isGuessed = true;
       setRealGameFieldBackEnd([...l]);
       setIsMachedPair("You Found A Pair! Congrats!" + `< ${clickedCell.v} >`);
+      // console.log("BEFORE  2> - setCountOpenedCells(0)", countOpenedCells);
 
-      if (countOpenedCells >= 2) {
-        // setCountOpenedCells(0);
-        countOpenedCells = 0;
+      if (countOpenedCells >= 1) {
+        // console.log("setCountOpenedCells(0)", countOpenedCells);
+        setCountOpenedCells(0);
+        // countOpenedCells = 0;
       }
     }
     listOfClickedCell = [];
     // console.log("Function: setListOfClickedCell", setListOfClickedCell);
     // setListOfClickedCell(listOfClickedCell);
   }
-  console.log("END OF FUNCTION!");
+  // console.log("END OF FUNCTION!");
 }
 
 // export function handleSomethingWithList(

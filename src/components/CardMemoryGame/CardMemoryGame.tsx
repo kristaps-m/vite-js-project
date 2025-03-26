@@ -8,8 +8,8 @@ import {
   countOpenedButNotGuessedCells,
   handleSomethingWithList,
 } from "./CardMemoryHelperFunctions";
-import { IClickedCell } from "../../interfaces/IClickedCell";
-export let countOpenedCells = 0;
+// import { IClickedCell } from "../../interfaces/IClickedCell";
+// let countOpenedCells = 0;
 // let listOfClickedCell: IClickedCell[] = [];
 
 const CardMemoryGame = () => {
@@ -23,7 +23,7 @@ const CardMemoryGame = () => {
   const handleDifficultyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setSelectedSize(parseInt(e.target.value));
   };
-  // const [countOpenedCells, setCountOpenedCells] = useState(0);
+  const [countOpenedCells, setCountOpenedCells] = useState(0);
   // const [listOfClickedCell, setListOfClickedCell] = useState<IClickedCell[]>([]);
 
   const handleConfirm = (e: React.FormEvent) => {
@@ -61,8 +61,8 @@ const CardMemoryGame = () => {
           }
         }
         console.log("Howdy");
-        // setCountOpenedCells(0);
-        countOpenedCells = 0;
+        setCountOpenedCells(0);
+        // countOpenedCells = 0;
       }, 3000);
     }
     const isVictory = isGameWon(realGameFieldBackEnd, fieldSize);
@@ -91,6 +91,7 @@ const CardMemoryGame = () => {
       >
         Print Field
       </button>
+      <button onClick={() => console.log(countOpenedCells)}>Click Count</button>
       <button
         onClick={() => {
           console.log(realGameFieldBackEnd.map((l) => [...l.map((o) => o.theValue)]));
@@ -128,9 +129,9 @@ const CardMemoryGame = () => {
           setRealGameFieldBackEnd,
           realGameFieldBackEnd,
           setIsMachedPair,
-          setToggleTimeStartOrStop
-          // countOpenedCells,
-          // setCountOpenedCells,
+          setToggleTimeStartOrStop,
+          countOpenedCells,
+          setCountOpenedCells
           // listOfClickedCell,
           // setListOfClickedCell
         )
@@ -148,9 +149,9 @@ function gameField(
   setRealGameFieldBackEnd: Dispatch<SetStateAction<IGameDiv[][]>>,
   fieldList: IGameDiv[][],
   setIsMachedPair: Dispatch<SetStateAction<string>>,
-  setToggleTimeStartOrStop: Dispatch<SetStateAction<boolean>>
-  // countOpenedCells: number,
-  // setCountOpenedCells: Dispatch<SetStateAction<number>>,
+  setToggleTimeStartOrStop: Dispatch<SetStateAction<boolean>>,
+  countOpenedCells: number,
+  setCountOpenedCells: Dispatch<SetStateAction<number>>
   // listOfClickedCell: IClickedCell[],
   // setListOfClickedCell: Dispatch<SetStateAction<IClickedCell[]>>
 ) {
@@ -162,19 +163,20 @@ function gameField(
     padding: "10px",
   };
 
-  const divStyle: React.CSSProperties = {
-    backgroundColor: "#f1f1f1",
-    border: "1px solid black",
-    padding: "10px",
-    fontSize: "30px",
-    textAlign: "center",
-  };
   const listOfdivs = [];
   for (let theHeight = 0; theHeight < size.sideLen; theHeight++) {
     for (let theWidth = 0; theWidth < size.sideLen; theWidth++) {
       listOfdivs.push(
         <div
-          style={divStyle}
+          style={{
+            backgroundColor: `${
+              fieldList[theHeight][theWidth].isGuessed ? "lightgreen" : "#f1f1f1"
+            }`,
+            border: "1px solid black",
+            padding: "10px",
+            fontSize: "30px",
+            textAlign: "center",
+          }}
           key={`${theHeight}-${theWidth}`}
           onClick={() => {
             handleSomethingWithList(
@@ -182,9 +184,9 @@ function gameField(
               setRealGameFieldBackEnd,
               `${theHeight}-${theWidth}`,
               setIsMachedPair,
-              setToggleTimeStartOrStop
-              // countOpenedCells,
-              // setCountOpenedCells,
+              setToggleTimeStartOrStop,
+              countOpenedCells,
+              setCountOpenedCells
               // listOfClickedCell,
               // setListOfClickedCell
             );
