@@ -1,12 +1,14 @@
 .light {
   --bg-color: #7ceab1;
   --bg-color_2: white;
+  --bg-color-memoGame: #f1f1f1;
   --text-color: #000000;
 }
 
 .dark {
   --bg-color: #1a1a1a;
   --bg-color_2: rgb(117, 117, 117);
+  --bg-color-memoGame: #4c4b4b;
   --text-color: #ffffff;
 }
 
@@ -86,6 +88,10 @@ body {
   /* columns: 3; */
   /* column-gap: 10rem; */
   /* background-color: rgb(209, 209, 209); */
+}
+
+.memoGameDiv {
+  color: var(--text-color);
 }
 
 button {
