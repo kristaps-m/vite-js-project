@@ -32,8 +32,7 @@ export function isGameWon(l: IGameDiv[][], size: IFieldSize) {
   // console.log(listOfClickedCell2);
   return size.sideLen * size.sideLen - 1 === openedAndGuessedCount;
 }
-// let countOpenedCells = 0;
-let listOfClickedCell: IClickedCell[] = [];
+
 export function handleSomethingWithList(
   l: IGameDiv[][],
   setRealGameFieldBackEnd: Dispatch<SetStateAction<IGameDiv[][]>>,
@@ -41,9 +40,9 @@ export function handleSomethingWithList(
   setIsMachedPair: Dispatch<SetStateAction<string>>,
   setToggleTimeStartOrStop: Dispatch<SetStateAction<boolean>>,
   countOpenedCells: number,
-  setCountOpenedCells: Dispatch<SetStateAction<number>>
-  // listOfClickedCell: IClickedCell[],
-  // setListOfClickedCell: Dispatch<SetStateAction<IClickedCell[]>>
+  setCountOpenedCells: Dispatch<SetStateAction<number>>,
+  listOfClickedCell: IClickedCell[],
+  setListOfClickedCell: Dispatch<SetStateAction<IClickedCell[]>>
 ) {
   setToggleTimeStartOrStop(true);
   // condition to allow open?!
@@ -60,12 +59,12 @@ export function handleSomethingWithList(
       h: theH,
       w: theW,
     };
-    listOfClickedCell.push(clickedCell);
+    // listOfClickedCell.push(clickedCell);
     // console.log(listOfClickedCell);
     // const tl = [...listOfClickedCell];
     // tl.push(clickedCell);
     // setListOfClickedCell(tl);
-    // setListOfClickedCell((currentClicks) => [...currentClicks, clickedCell]);
+    setListOfClickedCell((currentClicks) => [...currentClicks, clickedCell]);
     // console.log(clickedCell, countOpenedCells, listOfClickedCell);
 
     setRealGameFieldBackEnd([...l]);
@@ -96,7 +95,7 @@ export function handleSomethingWithList(
       h: theH,
       w: theW,
     };
-    listOfClickedCell.push(clickedCell);
+    // listOfClickedCell.push(clickedCell);
     // const tl = [...listOfClickedCell];
     // tl.push(clickedCell);
     // setListOfClickedCell((currentClicks) => [...currentClicks, clickedCell]);
@@ -105,24 +104,49 @@ export function handleSomethingWithList(
     setRealGameFieldBackEnd([...l]);
     setCountOpenedCells(2);
     // countOpenedCells++;
-    // console.log(countOpenedCells, listOfClickedCell);
-    if (listOfClickedCell[0].v === listOfClickedCell[1].v) {
-      // const tempList = [...l];
-      l[listOfClickedCell[0].h][listOfClickedCell[0].w].isGuessed = true;
-      l[listOfClickedCell[1].h][listOfClickedCell[1].w].isGuessed = true;
-      setRealGameFieldBackEnd([...l]);
-      setIsMachedPair("You Found A Pair! Congrats!" + `< ${clickedCell.v} >`);
-      // console.log("BEFORE  2> - setCountOpenedCells(0)", countOpenedCells);
+    console.log("CardHelpF:", countOpenedCells, listOfClickedCell);
 
-      if (countOpenedCells >= 1) {
-        // console.log("setCountOpenedCells(0)", countOpenedCells);
-        setCountOpenedCells(0);
-        // countOpenedCells = 0;
+    // --- Async ...
+    setListOfClickedCell((currentClicks) => {
+      const newList = [...currentClicks, clickedCell];
+
+      if (newList[0].v === newList[1].v) {
+        // const tempList = [...l];
+        l[newList[0].h][newList[0].w].isGuessed = true;
+        l[newList[1].h][newList[1].w].isGuessed = true;
+        setRealGameFieldBackEnd([...l]);
+        setIsMachedPair("You Found A Pair! Congrats!" + `< ${clickedCell.v} >`);
+        // console.log("BEFORE  2> - setCountOpenedCells(0)", countOpenedCells);
+
+        if (countOpenedCells >= 1) {
+          // console.log("setCountOpenedCells(0)", countOpenedCells);
+          setCountOpenedCells(0);
+          // countOpenedCells = 0;
+        }
       }
-    }
+
+      return newList;
+    });
+
+    // ----
+
+    // if (listOfClickedCell[0].v === listOfClickedCell[1].v) {
+    //   // const tempList = [...l];
+    //   l[listOfClickedCell[0].h][listOfClickedCell[0].w].isGuessed = true;
+    //   l[listOfClickedCell[1].h][listOfClickedCell[1].w].isGuessed = true;
+    //   setRealGameFieldBackEnd([...l]);
+    //   setIsMachedPair("You Found A Pair! Congrats!" + `< ${clickedCell.v} >`);
+    //   // console.log("BEFORE  2> - setCountOpenedCells(0)", countOpenedCells);
+
+    //   if (countOpenedCells >= 1) {
+    //     // console.log("setCountOpenedCells(0)", countOpenedCells);
+    //     setCountOpenedCells(0);
+    //     // countOpenedCells = 0;
+    //   }
+    // }
     listOfClickedCell = [];
     // console.log("Function: setListOfClickedCell", setListOfClickedCell);
-    // setListOfClickedCell(listOfClickedCell);
+    setListOfClickedCell(listOfClickedCell);
   }
   // console.log("END OF FUNCTION!");
 }

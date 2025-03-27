@@ -8,6 +8,7 @@ import {
   countOpenedButNotGuessedCells,
   handleSomethingWithList,
 } from "./CardMemoryHelperFunctions";
+import { IClickedCell } from "../../interfaces/IClickedCell";
 // import { IClickedCell } from "../../interfaces/IClickedCell";
 // let countOpenedCells = 0;
 // let listOfClickedCell: IClickedCell[] = [];
@@ -24,14 +25,14 @@ const CardMemoryGame = () => {
     setSelectedSize(parseInt(e.target.value));
   };
   const [countOpenedCells, setCountOpenedCells] = useState(0);
-  // const [listOfClickedCell, setListOfClickedCell] = useState<IClickedCell[]>([]);
+  const [listOfClickedCell, setListOfClickedCell] = useState<IClickedCell[]>([]);
 
   const handleConfirm = (e: React.FormEvent) => {
     e.preventDefault(); // Prevents the page from reloading
     setCanGameBegin(true);
     setFieldSize({ sideLen: selectedSize }); // Apply selected size on confirm
-    // setCountOpenedCells(0);
-    // setListOfClickedCell([]);
+    setCountOpenedCells(0);
+    setListOfClickedCell([]);
     setTimePassed(0);
     setIsMachedPair("Hey try to find a matching pair!");
     setRealGameFieldBackEnd(gameFieldBackEnd(selectedSize));
@@ -67,8 +68,10 @@ const CardMemoryGame = () => {
     }
     const isVictory = isGameWon(realGameFieldBackEnd, fieldSize);
     if (isVictory) {
-      console.log("GAME IS WON CONGRATULATIONS!!!");
-      setIsMachedPair("Hey try to find a matching pair!");
+      // alert("GAME IS WON CONGRATULATIONS!!!");
+      console.log("console says: 'GAME IS WON CONGRATULATIONS!!!'");
+      setIsMachedPair("GAME IS WON CONGRATULATIONS!!!");
+      setCountOpenedCells(0);
       setToggleTimeStartOrStop(false);
     }
 
@@ -91,7 +94,7 @@ const CardMemoryGame = () => {
       >
         Print Field
       </button>
-      <button onClick={() => console.log(countOpenedCells)}>Click Count</button>
+      <button onClick={() => console.log(countOpenedCells, listOfClickedCell)}>Click Count</button>
       <button
         onClick={() => {
           console.log(realGameFieldBackEnd.map((l) => [...l.map((o) => o.theValue)]));
@@ -117,6 +120,7 @@ const CardMemoryGame = () => {
           onChange={handleDifficultyChange}
           defaultValue={selectedSize}
         >
+          <option value="3">3 x 3</option>
           <option value="5">5 x 5</option>
           <option value="10">10 x 10</option>
           <option value="50">50x50</option>
@@ -131,9 +135,9 @@ const CardMemoryGame = () => {
           setIsMachedPair,
           setToggleTimeStartOrStop,
           countOpenedCells,
-          setCountOpenedCells
-          // listOfClickedCell,
-          // setListOfClickedCell
+          setCountOpenedCells,
+          listOfClickedCell,
+          setListOfClickedCell
         )
       ) : (
         <h1>Select Difficulty</h1>
@@ -151,9 +155,9 @@ function gameField(
   setIsMachedPair: Dispatch<SetStateAction<string>>,
   setToggleTimeStartOrStop: Dispatch<SetStateAction<boolean>>,
   countOpenedCells: number,
-  setCountOpenedCells: Dispatch<SetStateAction<number>>
-  // listOfClickedCell: IClickedCell[],
-  // setListOfClickedCell: Dispatch<SetStateAction<IClickedCell[]>>
+  setCountOpenedCells: Dispatch<SetStateAction<number>>,
+  listOfClickedCell: IClickedCell[],
+  setListOfClickedCell: Dispatch<SetStateAction<IClickedCell[]>>
 ) {
   // console.log(fieldList);
   const containerStyle: React.CSSProperties = {
@@ -186,9 +190,9 @@ function gameField(
               setIsMachedPair,
               setToggleTimeStartOrStop,
               countOpenedCells,
-              setCountOpenedCells
-              // listOfClickedCell,
-              // setListOfClickedCell
+              setCountOpenedCells,
+              listOfClickedCell,
+              setListOfClickedCell
             );
           }}
           id={`${theHeight}-${theWidth}`}
