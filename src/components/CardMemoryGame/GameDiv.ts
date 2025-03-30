@@ -12,11 +12,11 @@ export class GameDiv implements IGameDiv {
 }
 // Simple GameField for testing!
 // export const gameFieldBackEnd: IGameDiv[][] = [
-//   [new GameDiv(1), new GameDiv(1), new GameDiv(2), new GameDiv(2), new GameDiv(11)],
+//   [new GameDiv(0), new GameDiv(1), new GameDiv(2), new GameDiv(2), new GameDiv(11)],
 //   [new GameDiv(3), new GameDiv(3), new GameDiv(4), new GameDiv(4), new GameDiv(11)],
 //   [new GameDiv(5), new GameDiv(5), new GameDiv(6), new GameDiv(6), new GameDiv(12)],
 //   [new GameDiv(7), new GameDiv(7), new GameDiv(8), new GameDiv(8), new GameDiv(12)],
-//   [new GameDiv(9), new GameDiv(9), new GameDiv(10), new GameDiv(10), new GameDiv(0)],
+//   [new GameDiv(9), new GameDiv(9), new GameDiv(10), new GameDiv(10), new GameDiv(1)],
 // ];
 export const gameFieldBackEnd = (n: number) => generateField(n);
 export function generateField(size: number) {

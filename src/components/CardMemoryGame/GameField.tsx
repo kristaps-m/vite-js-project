@@ -1,12 +1,11 @@
 import "../../App.css";
 import { Dispatch, SetStateAction } from "react";
-import { IFieldSize } from "../../interfaces/IFieldSize";
 import { IGameDiv } from "../../interfaces/IGameDiv";
 import { IClickedCell } from "../../interfaces/IClickedCell";
 import { handleSomethingWithList } from "./CardMemoryHelperFunctions";
 
 function GameField(
-  size: IFieldSize,
+  size: number,
   setRealGameFieldBackEnd: Dispatch<SetStateAction<IGameDiv[][]>>,
   fieldList: IGameDiv[][],
   setIsMachedPair: Dispatch<SetStateAction<string>>,
@@ -18,14 +17,14 @@ function GameField(
 ) {
   const containerStyle: React.CSSProperties = {
     display: "grid",
-    gridTemplateColumns: "auto ".repeat(size.sideLen),
+    gridTemplateColumns: "auto ".repeat(size),
     backgroundColor: "dodgerblue",
     padding: "10px",
   };
-
+  // console.log(size, "size");
   const listOfdivs = [];
-  for (let theHeight = 0; theHeight < size.sideLen; theHeight++) {
-    for (let theWidth = 0; theWidth < size.sideLen; theWidth++) {
+  for (let theHeight = 0; theHeight < size; theHeight++) {
+    for (let theWidth = 0; theWidth < size; theWidth++) {
       listOfdivs.push(
         <div
           style={{
@@ -34,11 +33,11 @@ function GameField(
             }`,
             border: "1px solid black",
             padding: "6px",
-            fontSize: size.sideLen < 6 ? "28px" : "20px",
+            fontSize: size < 6 ? "28px" : "20px",
             textAlign: "center",
             alignItems: "center",
-            width: size.sideLen < 6 ? "" : "2rem",
-            height: size.sideLen < 6 ? "" : "2rem",
+            width: size < 6 ? "" : "2rem",
+            height: size < 6 ? "" : "2rem",
           }}
           className="memoGameDiv"
           key={`${theHeight}-${theWidth}`}

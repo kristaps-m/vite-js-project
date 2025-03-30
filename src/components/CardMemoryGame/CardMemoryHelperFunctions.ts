@@ -1,13 +1,12 @@
 import { Dispatch, SetStateAction } from "react";
-import { IFieldSize } from "../../interfaces/IFieldSize";
 import { IGameDiv } from "../../interfaces/IGameDiv";
 import { IClickedCell } from "../../interfaces/IClickedCell";
 
-export function countOpenedButNotGuessedCells(l: IGameDiv[][], size: IFieldSize) {
+export function countOpenedButNotGuessedCells(l: IGameDiv[][], size: number) {
   let openedCellsCount = 0;
 
-  for (let theHeight = 0; theHeight < size.sideLen; theHeight++) {
-    for (let theWidth = 0; theWidth < size.sideLen; theWidth++) {
+  for (let theHeight = 0; theHeight < size; theHeight++) {
+    for (let theWidth = 0; theWidth < size; theWidth++) {
       if (l[theHeight][theWidth].isOpened && !l[theHeight][theWidth].isGuessed) {
         openedCellsCount++;
       }
@@ -17,18 +16,18 @@ export function countOpenedButNotGuessedCells(l: IGameDiv[][], size: IFieldSize)
   return openedCellsCount;
 }
 
-export function isGameWon(l: IGameDiv[][], size: IFieldSize) {
+export function isGameWon(l: IGameDiv[][], size: number) {
   let openedAndGuessedCount = 0;
 
-  for (let theHeight = 0; theHeight < size.sideLen; theHeight++) {
-    for (let theWidth = 0; theWidth < size.sideLen; theWidth++) {
+  for (let theHeight = 0; theHeight < size; theHeight++) {
+    for (let theWidth = 0; theWidth < size; theWidth++) {
       if (l[theHeight][theWidth].isOpened && l[theHeight][theWidth].isGuessed) {
         openedAndGuessedCount++;
       }
     }
   }
 
-  return size.sideLen * size.sideLen - 1 === openedAndGuessedCount;
+  return size * size - 1 === openedAndGuessedCount;
 }
 
 export function handleSomethingWithList(
@@ -86,7 +85,7 @@ export function handleSomethingWithList(
         setIsMachedPair("You Found A Pair! Congrats!" + `< ${clickedCell.v} >`);
 
         if (countOpenedCells >= 1) {
-          console.log("setCountOpenedCells(0)", countOpenedCells);
+          // console.log("setCountOpenedCells(0)", countOpenedCells);
           setCountOpenedCells(0);
         }
       }
