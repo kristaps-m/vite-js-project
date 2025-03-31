@@ -40,7 +40,7 @@ const CardMemoryGame = () => {
     setIsMachedPair("Hey try to find a matching pair!");
     setRealGameFieldBackEnd(gameFieldBackEnd(selectedSize ? selectedSize : 5));
     setToggleTimeStartOrStop(false);
-    const localStorageHighscore = localStorage.getItem("highscore" + selectedSize);
+    const localStorageHighscore = localStorage.getItem("highscore" + fieldSize);
     setHighscore(localStorageHighscore ? localStorageHighscore : "0");
   };
 
@@ -51,7 +51,7 @@ const CardMemoryGame = () => {
     return localStorageTimePassed ? parseInt(localStorageTimePassed) : 0;
   });
   const [highscore, setHighscore] = useState(() => {
-    const localStorageHighscore = localStorage.getItem("highscore" + selectedSize);
+    const localStorageHighscore = localStorage.getItem("highscore" + fieldSize);
     return localStorageHighscore ? localStorageHighscore : "0";
   });
 
@@ -64,12 +64,10 @@ const CardMemoryGame = () => {
 
   useEffect(() => {
     const c = countOpenedButNotGuessedCells(realGameFieldBackEnd, fieldSize);
-    console.log(c, isTimeStarted);
     let interval: number;
 
     if (isTimeStarted && c === 2) {
       setIsMachedPair("PAIR NOT FOUND!!!");
-      // console.log("Before Howdy");
 
       interval = setInterval(() => {
         for (let theHeight = 0; theHeight < fieldSize; theHeight++) {
@@ -82,10 +80,9 @@ const CardMemoryGame = () => {
             }
           }
         }
-        console.log("Howdy");
+        console.log("Cards where not equal they are turned over after 3 seconds!");
         setCountOpenedCells(0);
         localStorage.setItem(MEMO_GAME_STR_NAME, JSON.stringify(realGameFieldBackEnd));
-        // setRealGameFieldBackEnd(realGameFieldBackEnd);
       }, 3000);
     }
     const isVictory = isGameWon(realGameFieldBackEnd, fieldSize);
@@ -96,10 +93,10 @@ const CardMemoryGame = () => {
       setCountOpenedCells(0);
       setToggleTimeStartOrStop(false);
       if (highscore === "0") {
-        localStorage.setItem("highscore" + selectedSize, timePassed.toString());
+        localStorage.setItem("highscore" + fieldSize, timePassed.toString());
         setHighscore(timePassed.toString());
       } else if (timePassed < parseInt(highscore)) {
-        localStorage.setItem("highscore" + selectedSize, timePassed.toString());
+        localStorage.setItem("highscore" + fieldSize, timePassed.toString());
         setHighscore(timePassed.toString());
       }
     }
@@ -107,8 +104,8 @@ const CardMemoryGame = () => {
     return () => {
       clearInterval(interval);
     };
-  }, [isTimeStarted, realGameFieldBackEnd, fieldSize]); // , timePassed, highscore, selectedSize
-  // console.log(fieldSize, " fieldSize", realGameFieldBackEnd);
+  }, [isTimeStarted, realGameFieldBackEnd, fieldSize]);
+
   return (
     <div
       style={{
@@ -118,21 +115,17 @@ const CardMemoryGame = () => {
       }}
     >
       <h1>Card Memory Game</h1>
-      <button
-        onClick={() => {
-          console.log(realGameFieldBackEnd);
-        }}
-      >
-        Print Field
-      </button>
-      <button
+      {/* <button
         onClick={() => {
           console.log(realGameFieldBackEnd.map((l) => [...l.map((o) => o.theValue)]));
         }}
       >
         Print Field Maped
-      </button>
-      <h6>highscore: {new Date(parseInt(highscore) * 1000).toISOString().substring(11, 19)}</h6>
+      </button> */}
+      <h5>
+        highscore {fieldSize}x{fieldSize}:{" "}
+        {new Date(parseInt(highscore) * 1000).toISOString().substring(11, 19)}
+      </h5>
       <h3>
         {
           TheTimer({

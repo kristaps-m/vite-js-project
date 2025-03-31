@@ -92,6 +92,15 @@ body {
 
 .memoGameDiv {
   color: var(--text-color);
+  -moz-user-select: none; /* firefox */
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE*/
+  user-select: none; /* Standard syntax */
+}
+.memoGameDiv:hover {
+  color: red;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 button {

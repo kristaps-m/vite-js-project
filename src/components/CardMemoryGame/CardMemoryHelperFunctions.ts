@@ -26,8 +26,8 @@ export function isGameWon(l: IGameDiv[][], size: number) {
       }
     }
   }
-
-  return size * size - 1 === openedAndGuessedCount;
+  const subtractIfOdd = size % 2 === 1 ? 1 : 0;
+  return size * size - subtractIfOdd === openedAndGuessedCount;
 }
 
 export function handleSomethingWithList(
@@ -85,7 +85,6 @@ export function handleSomethingWithList(
         setIsMachedPair("You Found A Pair! Congrats!" + `< ${clickedCell.v} >`);
 
         if (countOpenedCells >= 1) {
-          // console.log("setCountOpenedCells(0)", countOpenedCells);
           setCountOpenedCells(0);
         }
       }

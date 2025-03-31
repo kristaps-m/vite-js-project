@@ -22,6 +22,7 @@ export const gameFieldBackEnd = (n: number) => generateField(n);
 export function generateField(size: number) {
   const gameField: IGameDiv[][] = [];
   let startingValue = 1;
+  const openAndGuessCellsForTesting = false;
   for (let theHeight = 0; theHeight < size; theHeight++) {
     const tempList: IGameDiv[] = [];
     for (let theWidth = 0; theWidth < size; theWidth++) {
@@ -34,10 +35,24 @@ export function generateField(size: number) {
     const randW = randomInt(0, size);
     if (gameField[randH][randW].theValue === 0) {
       gameField[randH][randW].theValue = startingValue;
-      // console.log(startingValue);
+      if (openAndGuessCellsForTesting) {
+        gameField[randH][randW].isOpened = true;
+        gameField[randH][randW].isGuessed = true;
+      }
     }
     if (countValue(size, gameField, startingValue) === 2) {
       startingValue++;
+    }
+  }
+
+  if (openAndGuessCellsForTesting) {
+    for (let theHeight = 0; theHeight < size; theHeight++) {
+      for (let theWidth = 0; theWidth < size; theWidth++) {
+        if (gameField[theHeight][theWidth].theValue <= 3) {
+          gameField[theHeight][theWidth].isOpened = false;
+          gameField[theHeight][theWidth].isGuessed = false;
+        }
+      }
     }
   }
 

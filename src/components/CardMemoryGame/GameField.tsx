@@ -21,7 +21,7 @@ function GameField(
     backgroundColor: "dodgerblue",
     padding: "10px",
   };
-  // console.log(size, "size");
+
   const listOfdivs = [];
   for (let theHeight = 0; theHeight < size; theHeight++) {
     for (let theWidth = 0; theWidth < size; theWidth++) {
