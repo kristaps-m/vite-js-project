@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import TaskList from "./TaskList";
 import { IToDo } from "../../interfaces/IToDo";
+import { TASKS_STR } from "../../constants";
 
 function ToDoApp() {
   const [tasks, setTasks] = useState<IToDo[]>(() => {
-    const savedTasks = localStorage.getItem("tasks");
+    const savedTasks = localStorage.getItem(TASKS_STR);
     return savedTasks ? JSON.parse(savedTasks) : []; // Ensure it's an array
   });
   useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
+    localStorage.setItem(TASKS_STR, JSON.stringify(tasks));
   }, [tasks]);
 
   function handleAdd(j: string | undefined) {

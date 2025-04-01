@@ -5,18 +5,23 @@ import { gameFieldBackEnd } from "./GameDiv";
 import { isGameWon, countOpenedButNotGuessedCells } from "./CardMemoryHelperFunctions";
 import { IClickedCell } from "../../interfaces/IClickedCell";
 import GameField from "./GameField";
-const MEMO_GAME_STR_NAME = "memoryGameCards";
-const CAN_GAME_BEGIN_STR = "canGameBegin";
-const TIME_PASSED_STR = "timePassed";
+import {
+  CAN_GAME_BEGIN_STR,
+  CARD_GAME_LEVELS,
+  FIELD_SIZE_STR,
+  HIGHSCORE_STR,
+  MEMO_GAME_CARDS_STR,
+  TIME_PASSED_STR,
+} from "../../constants";
 
 const CardMemoryGame = () => {
   const [fieldSize, setFieldSize] = useState<number>(() => {
-    const fS = localStorage.getItem("fieldSize");
+    const fS = localStorage.getItem(FIELD_SIZE_STR);
     return fS ? parseInt(fS) : 5;
   });
   const [selectedSize, setSelectedSize] = useState<number>(); // Temporary selection
   const [realGameFieldBackEnd, setRealGameFieldBackEnd] = useState<IGameDiv[][]>(() => {
-    const savedGameField = localStorage.getItem(MEMO_GAME_STR_NAME);
+    const savedGameField = localStorage.getItem(MEMO_GAME_CARDS_STR);
     return savedGameField ? JSON.parse(savedGameField) : gameFieldBackEnd(fieldSize);
   });
   const [isMachedPair, setIsMachedPair] = useState<string>("Hey try to find a matching pair!");
@@ -33,14 +38,14 @@ const CardMemoryGame = () => {
   const handleConfirm = (e: React.FormEvent) => {
     e.preventDefault(); // Prevents the page from reloading
     setCanGameBegin("true");
-    setFieldSize(selectedSize ? selectedSize : 5);
+    setFieldSize(selectedSize ? selectedSize : CARD_GAME_LEVELS.easy);
     setCountOpenedCells(0);
     setListOfClickedCell([]);
     setTimePassed(0);
     setIsMachedPair("Hey try to find a matching pair!");
-    setRealGameFieldBackEnd(gameFieldBackEnd(selectedSize ? selectedSize : 5));
+    setRealGameFieldBackEnd(gameFieldBackEnd(selectedSize ? selectedSize : CARD_GAME_LEVELS.easy));
     setToggleTimeStartOrStop(false);
-    const localStorageHighscore = localStorage.getItem("highscore" + fieldSize);
+    const localStorageHighscore = localStorage.getItem(HIGHSCORE_STR + selectedSize);
     setHighscore(localStorageHighscore ? localStorageHighscore : "0");
   };
 
@@ -51,15 +56,15 @@ const CardMemoryGame = () => {
     return localStorageTimePassed ? parseInt(localStorageTimePassed) : 0;
   });
   const [highscore, setHighscore] = useState(() => {
-    const localStorageHighscore = localStorage.getItem("highscore" + fieldSize);
+    const localStorageHighscore = localStorage.getItem(HIGHSCORE_STR + fieldSize);
     return localStorageHighscore ? localStorageHighscore : "0";
   });
 
   useEffect(() => {
     localStorage.setItem(CAN_GAME_BEGIN_STR, canGameBegin.toString());
-    localStorage.setItem(MEMO_GAME_STR_NAME, JSON.stringify(realGameFieldBackEnd));
+    localStorage.setItem(MEMO_GAME_CARDS_STR, JSON.stringify(realGameFieldBackEnd));
     localStorage.setItem(TIME_PASSED_STR, timePassed.toString());
-    localStorage.setItem("fieldSize", fieldSize.toString());
+    localStorage.setItem(FIELD_SIZE_STR, fieldSize.toString());
   }, [canGameBegin, realGameFieldBackEnd, timePassed, fieldSize]);
 
   useEffect(() => {
@@ -82,7 +87,7 @@ const CardMemoryGame = () => {
         }
         console.log("Cards where not equal they are turned over after 3 seconds!");
         setCountOpenedCells(0);
-        localStorage.setItem(MEMO_GAME_STR_NAME, JSON.stringify(realGameFieldBackEnd));
+        localStorage.setItem(MEMO_GAME_CARDS_STR, JSON.stringify(realGameFieldBackEnd));
       }, 3000);
     }
     const isVictory = isGameWon(realGameFieldBackEnd, fieldSize);
@@ -93,10 +98,10 @@ const CardMemoryGame = () => {
       setCountOpenedCells(0);
       setToggleTimeStartOrStop(false);
       if (highscore === "0") {
-        localStorage.setItem("highscore" + fieldSize, timePassed.toString());
+        localStorage.setItem(HIGHSCORE_STR + fieldSize, timePassed.toString());
         setHighscore(timePassed.toString());
       } else if (timePassed < parseInt(highscore)) {
-        localStorage.setItem("highscore" + fieldSize, timePassed.toString());
+        localStorage.setItem(HIGHSCORE_STR + fieldSize, timePassed.toString());
         setHighscore(timePassed.toString());
       }
     }
@@ -144,9 +149,9 @@ const CardMemoryGame = () => {
           onChange={handleDifficultyChange}
           defaultValue={selectedSize}
         >
-          <option value="5">5 x 5</option>
-          <option value="10">10 x 10</option>
-          <option value="30">30x30</option>
+          <option value={CARD_GAME_LEVELS.easy}>5 x 5</option>
+          <option value={CARD_GAME_LEVELS.medium}>10 x 10</option>
+          <option value={CARD_GAME_LEVELS.hard}>30 x 30</option>
         </select>
         <button type="submit">Confirm</button>
       </form>

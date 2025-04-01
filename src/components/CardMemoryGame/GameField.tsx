@@ -2,7 +2,7 @@ import "../../App.css";
 import { Dispatch, SetStateAction } from "react";
 import { IGameDiv } from "../../interfaces/IGameDiv";
 import { IClickedCell } from "../../interfaces/IClickedCell";
-import { handleSomethingWithList } from "./CardMemoryHelperFunctions";
+import { handleClickMemoryGameCell } from "./CardMemoryHelperFunctions";
 
 function GameField(
   size: number,
@@ -42,7 +42,7 @@ function GameField(
           className="memoGameDiv"
           key={`${theHeight}-${theWidth}`}
           onClick={() => {
-            handleSomethingWithList(
+            handleClickMemoryGameCell(
               fieldList,
               setRealGameFieldBackEnd,
               `${theHeight}-${theWidth}`,

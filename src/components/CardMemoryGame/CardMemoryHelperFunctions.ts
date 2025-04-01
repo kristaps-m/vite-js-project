@@ -30,7 +30,7 @@ export function isGameWon(l: IGameDiv[][], size: number) {
   return size * size - subtractIfOdd === openedAndGuessedCount;
 }
 
-export function handleSomethingWithList(
+export function handleClickMemoryGameCell(
   l: IGameDiv[][],
   setRealGameFieldBackEnd: Dispatch<SetStateAction<IGameDiv[][]>>,
   id: string,

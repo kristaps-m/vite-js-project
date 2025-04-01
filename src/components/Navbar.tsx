@@ -17,6 +17,9 @@ function Navbar() {
         <li>
           <Link to="/CardMemoryGame">Card Memory Game</Link>
         </li>
+        <li>
+          <Link to="/About">About</Link>
+        </li>
       </ul>
 
       <button style={{ position: "absolute", right: 0, marginRight: "2rem" }} onClick={toggleTheme}>

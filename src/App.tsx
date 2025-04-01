@@ -5,6 +5,7 @@ import Home from "./components/Home";
 import Navbar from "./components/Navbar";
 import { useTheme } from "./theme/ThemeContext";
 import CardMemoryGame from "./components/CardMemoryGame/CardMemoryGame";
+import About from "./components/About";
 
 function App() {
   const { theme } = useTheme();
@@ -18,6 +19,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/ToDoApp" element={<ToDoApp />} />
             <Route path="/CardMemoryGame" element={<CardMemoryGame />}></Route>
+            <Route path="/About" element={<About />}></Route>
           </Routes>
         </div>
       </Router>

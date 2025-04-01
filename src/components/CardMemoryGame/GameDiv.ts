@@ -1,4 +1,5 @@
 import { IGameDiv } from "../../interfaces/IGameDiv";
+import { useCardGame } from "../TestGlobalThing";
 
 export class GameDiv implements IGameDiv {
   constructor(theValue: number = 0, isOpened: boolean = false, isGuessed: boolean = false) {
@@ -20,6 +21,8 @@ export class GameDiv implements IGameDiv {
 // ];
 export const gameFieldBackEnd = (n: number) => generateField(n);
 export function generateField(size: number) {
+  // const { themeTest } = useCardGame();
+
   const gameField: IGameDiv[][] = [];
   let startingValue = 1;
   const openAndGuessCellsForTesting = false;
