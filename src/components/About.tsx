@@ -8,7 +8,7 @@ import {
   TASKS_STR,
   TIME_PASSED_STR,
 } from "../constants";
-import { useCardGame } from "./TestGlobalThing";
+import { useMemoryGame } from "./CardMemoryGame/MemoryGameContext";
 
 interface ILocalItem {
   localItem: string;
@@ -16,7 +16,7 @@ interface ILocalItem {
 }
 
 const About = () => {
-  const { themeTest, toggleOpenAndGuessCells } = useCardGame();
+  const { testMode, setTestMode } = useMemoryGame();
   const [localDBitems, setLocalDBitems] = useState<ILocalItem[]>([
     { localItem: CAN_GAME_BEGIN_STR, toDelete: false },
     { localItem: FIELD_SIZE_STR, toDelete: false },
@@ -45,7 +45,9 @@ const About = () => {
   function handleCheckBoxChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, checked } = e.target; // Extract values properly
     setLocalDBitems((prevItems) =>
-      prevItems.map((item) => (item.localItem === name ? { ...item, toDelete: checked } : item))
+      prevItems.map((item) =>
+        item.localItem === name ? { ...item, toDelete: checked } : item
+      )
     );
   }
 
@@ -60,8 +62,13 @@ const About = () => {
 
   return (
     <>
-      <h1>Welcome to about page {`${themeTest}`}</h1>
-      <button onClick={toggleOpenAndGuessCells}>Click Me</button>
+      <h1>Welcome to about page</h1>
+      <button
+        style={{ backgroundColor: testMode ? "red" : "" }}
+        onClick={() => setTestMode(!testMode)}
+      >
+        {testMode ? "Disable Test Mode" : "Enable Test Mode"}
+      </button>
       <br />
       <form
         onSubmit={(e) => {

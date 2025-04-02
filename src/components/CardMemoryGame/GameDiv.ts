@@ -1,8 +1,11 @@
 import { IGameDiv } from "../../interfaces/IGameDiv";
-import { useCardGame } from "../TestGlobalThing";
 
 export class GameDiv implements IGameDiv {
-  constructor(theValue: number = 0, isOpened: boolean = false, isGuessed: boolean = false) {
+  constructor(
+    theValue: number = 0,
+    isOpened: boolean = false,
+    isGuessed: boolean = false
+  ) {
     this.theValue = theValue;
     this.isOpened = isOpened;
     this.isGuessed = isGuessed;
@@ -19,13 +22,12 @@ export class GameDiv implements IGameDiv {
 //   [new GameDiv(7), new GameDiv(7), new GameDiv(8), new GameDiv(8), new GameDiv(12)],
 //   [new GameDiv(9), new GameDiv(9), new GameDiv(10), new GameDiv(10), new GameDiv(1)],
 // ];
-export const gameFieldBackEnd = (n: number) => generateField(n);
-export function generateField(size: number) {
-  // const { themeTest } = useCardGame();
 
+export const gameFieldBackEnd = (n: number, b: boolean) => generateField(n, b);
+function generateField(size: number, openAndGuessCellsForTesting: boolean) {
   const gameField: IGameDiv[][] = [];
   let startingValue = 1;
-  const openAndGuessCellsForTesting = false;
+
   for (let theHeight = 0; theHeight < size; theHeight++) {
     const tempList: IGameDiv[] = [];
     for (let theWidth = 0; theWidth < size; theWidth++) {
