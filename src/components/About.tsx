@@ -10,14 +10,14 @@ import {
 } from "../constants";
 import { useMemoryGame } from "./CardMemoryGame/MemoryGameContext";
 
-interface ILocalItem {
+interface ILocalStorageItem {
   localItem: string;
   toDelete: boolean;
 }
 
 const About = () => {
   const { testMode, setTestMode } = useMemoryGame();
-  const [localDBitems, setLocalDBitems] = useState<ILocalItem[]>([
+  const [localDBitems, setLocalDBitems] = useState<ILocalStorageItem[]>([
     { localItem: CAN_GAME_BEGIN_STR, toDelete: false },
     { localItem: FIELD_SIZE_STR, toDelete: false },
     { localItem: HIGHSCORE_STR + CARD_GAME_LEVELS.easy, toDelete: false },
@@ -61,8 +61,27 @@ const About = () => {
   };
 
   return (
-    <>
-      <h1>Welcome to about page</h1>
+    <div style={{ marginTop: "25rem" }}>
+      <h2>Welcome to about page</h2>
+      <p>
+        This project is created in year 2025 using{" "}
+        <a href="http://vite.dev/guide">vite.dev/guide</a>
+      </p>
+      <p>
+        It contains simple challeging tasks like "ToDoApp" and "CardMemoryGame".
+        States of these games are saved in browsers localStorage.
+      </p>
+      <p>
+        You can navigate through components using navigation buttons on top of
+        page.
+      </p>
+      <p>You I included some testing features here in About page.</p>
+      <p>
+        You can "Disable Test Mode" or "Enable Test Mode". If enabled it will
+        help you solve Memory game faster. Go check it out :). Also you can
+        clear whats saved in localStorage here in about page. For example you
+        added to many tasks, here you can delete them all at once.
+      </p>
       <button
         style={{ backgroundColor: testMode ? "red" : "" }}
         onClick={() => setTestMode(!testMode)}
@@ -103,7 +122,7 @@ const About = () => {
           </div>
         </fieldset>
       </form>
-    </>
+    </div>
   );
 };
 

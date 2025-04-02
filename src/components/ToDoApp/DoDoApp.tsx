@@ -15,7 +15,10 @@ function ToDoApp() {
   function handleAdd(j: string | undefined) {
     const newJobText = j ? j : "";
 
-    setTasks([...tasks, { id: crypto.randomUUID(), job: newJobText, status: "todo" }]);
+    setTasks([
+      ...tasks,
+      { id: crypto.randomUUID(), job: newJobText, status: "todo" },
+    ]);
   }
 
   const handleDeleteJob = (id: string) => {
@@ -29,24 +32,30 @@ function ToDoApp() {
   function handleEditJob(id: string, newValue: string | undefined) {
     if (newValue) {
       setTasks((prevTasks) =>
-        prevTasks.map((task) => (task.id === id ? { ...task, job: newValue } : task))
+        prevTasks.map((task) =>
+          task.id === id ? { ...task, job: newValue } : task
+        )
       );
     }
   }
 
-  const handleDrop = (taskId: string, newStatus: "todo" | "inProgress" | "done") => {
+  const handleDrop = (
+    taskId: string,
+    newStatus: "todo" | "inProgress" | "done"
+  ) => {
     setTasks((prevTasks) =>
-      prevTasks.map((task) => (task.id === taskId ? { ...task, status: newStatus } : task))
+      prevTasks.map((task) =>
+        task.id === taskId ? { ...task, status: newStatus } : task
+      )
     );
   };
 
   return (
-    <div>
+    <div className="todo-header">
       <button
         onClick={() => {
           handleAdd("");
         }}
-        style={{ float: "right" }}
       >
         New Task
       </button>

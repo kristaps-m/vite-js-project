@@ -14,7 +14,7 @@ function App() {
     <>
       <Router>
         <Navbar />
-        <div className={theme}>
+        <div className={`content ${theme}`}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/ToDoApp" element={<ToDoApp />} />
