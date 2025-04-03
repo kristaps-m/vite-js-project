@@ -2,10 +2,7 @@ import { useState, useEffect } from "react";
 import TheTimer from "./TheTimer";
 import { IGameDiv } from "../../interfaces/IGameDiv";
 import { gameFieldBackEnd } from "./GameDiv";
-import {
-  isGameWon,
-  countOpenedButNotGuessedCells,
-} from "./CardMemoryHelperFunctions";
+import { isGameWon, countOpenedButNotGuessedCells } from "./CardMemoryHelperFunctions";
 import { IClickedCell } from "../../interfaces/IClickedCell";
 import GameField from "./GameField";
 import {
@@ -25,17 +22,11 @@ const CardMemoryGame = () => {
     return fS ? parseInt(fS) : 5;
   });
   const [selectedSize, setSelectedSize] = useState<number>(); // Temporary selection
-  const [realGameFieldBackEnd, setRealGameFieldBackEnd] = useState<
-    IGameDiv[][]
-  >(() => {
+  const [realGameFieldBackEnd, setRealGameFieldBackEnd] = useState<IGameDiv[][]>(() => {
     const savedGameField = localStorage.getItem(MEMO_GAME_CARDS_STR);
-    return savedGameField
-      ? JSON.parse(savedGameField)
-      : gameFieldBackEnd(fieldSize, testMode);
+    return savedGameField ? JSON.parse(savedGameField) : gameFieldBackEnd(fieldSize, testMode);
   });
-  const [isMachedPair, setIsMachedPair] = useState<string>(
-    "Hey try to find a matching pair!"
-  );
+  const [isMachedPair, setIsMachedPair] = useState<string>("Hey try to find a matching pair!");
   const [canGameBegin, setCanGameBegin] = useState<string>(() => {
     const savedCanGameBegin = localStorage.getItem(CAN_GAME_BEGIN_STR);
     return savedCanGameBegin ? savedCanGameBegin : "false";
@@ -44,9 +35,7 @@ const CardMemoryGame = () => {
     setSelectedSize(parseInt(e.target.value));
   };
   const [countOpenedCells, setCountOpenedCells] = useState(0);
-  const [listOfClickedCell, setListOfClickedCell] = useState<IClickedCell[]>(
-    []
-  );
+  const [listOfClickedCell, setListOfClickedCell] = useState<IClickedCell[]>([]);
 
   const handleConfirm = (e: React.FormEvent) => {
     e.preventDefault(); // Prevents the page from reloading
@@ -57,17 +46,16 @@ const CardMemoryGame = () => {
     setTimePassed(0);
     setIsMachedPair("Hey try to find a matching pair!");
     setRealGameFieldBackEnd(
-      gameFieldBackEnd(
-        selectedSize ? selectedSize : CARD_GAME_LEVELS.easy,
-        testMode
-      )
+      gameFieldBackEnd(selectedSize ? selectedSize : CARD_GAME_LEVELS.easy, testMode)
     );
     setToggleTimeStartOrStop(false);
-    const localStorageHighscore = localStorage.getItem(
-      HIGHSCORE_STR + selectedSize
-    );
-    setHighscore(localStorageHighscore ? localStorageHighscore : "0");
   };
+
+  // Use `useEffect` to update highscore after `fieldSize` updates
+  useEffect(() => {
+    const localStorageHighscore = localStorage.getItem(HIGHSCORE_STR + fieldSize);
+    setHighscore(localStorageHighscore ? localStorageHighscore : "0");
+  }, [fieldSize]); // Runs whenever `fieldSize` changes
 
   //  FOR TIMER
   const [isTimeStarted, setToggleTimeStartOrStop] = useState<boolean>(false);
@@ -76,18 +64,13 @@ const CardMemoryGame = () => {
     return localStorageTimePassed ? parseInt(localStorageTimePassed) : 0;
   });
   const [highscore, setHighscore] = useState(() => {
-    const localStorageHighscore = localStorage.getItem(
-      HIGHSCORE_STR + fieldSize
-    );
+    const localStorageHighscore = localStorage.getItem(HIGHSCORE_STR + fieldSize);
     return localStorageHighscore ? localStorageHighscore : "0";
   });
 
   useEffect(() => {
     localStorage.setItem(CAN_GAME_BEGIN_STR, canGameBegin.toString());
-    localStorage.setItem(
-      MEMO_GAME_CARDS_STR,
-      JSON.stringify(realGameFieldBackEnd)
-    );
+    localStorage.setItem(MEMO_GAME_CARDS_STR, JSON.stringify(realGameFieldBackEnd));
     localStorage.setItem(TIME_PASSED_STR, timePassed.toString());
     localStorage.setItem(FIELD_SIZE_STR, fieldSize.toString());
   }, [canGameBegin, realGameFieldBackEnd, timePassed, fieldSize]);
@@ -110,14 +93,9 @@ const CardMemoryGame = () => {
             }
           }
         }
-        console.log(
-          "Cards where not equal they are turned over after 3 seconds!"
-        );
+        console.log("Cards where not equal they are turned over after 3 seconds!");
         setCountOpenedCells(0);
-        localStorage.setItem(
-          MEMO_GAME_CARDS_STR,
-          JSON.stringify(realGameFieldBackEnd)
-        );
+        localStorage.setItem(MEMO_GAME_CARDS_STR, JSON.stringify(realGameFieldBackEnd));
       }, 3000);
     }
     const isVictory = isGameWon(realGameFieldBackEnd, fieldSize);
@@ -145,23 +123,28 @@ const CardMemoryGame = () => {
     <div
       style={{
         // margin from top depending on gameSize so that text "Card Memory Game" is visible.
-        // 5x5 = 20, 30x30 = 90, 10x10 = 35
-        marginTop: `${fieldSize < 6 ? 20 : fieldSize >= 30 ? 90 : 35}rem`,
+        // 5x5 = 0, 30x30 = 45, 10x10 = 0
+        marginTop: `${fieldSize < 6 ? 0 : fieldSize >= 30 ? 45 : 0}rem`,
       }}
     >
       <h1>Card Memory Game</h1>
       {testMode ? <p style={{ backgroundColor: "red" }}>TEST MODE</p> : null}
-      {/* <button
-        onClick={() => {
-          console.log(realGameFieldBackEnd.map((l) => [...l.map((o) => o.theValue)]));
-        }}
-      >
-        Print Field Maped
-      </button> */}
+      {testMode ? (
+        <button
+          onClick={() => {
+            console.log(realGameFieldBackEnd.map((l) => [...l.map((o) => o.theValue)]));
+          }}
+        >
+          Print Field Numbers in console
+        </button>
+      ) : null}
       <h5>
         highscore {fieldSize}x{fieldSize}:{" "}
         {new Date(parseInt(highscore) * 1000).toISOString().substring(11, 19)}
       </h5>
+      <p>
+        Selected Size: - {selectedSize} - FieldSize: - {fieldSize} -
+      </p>
       <h3>
         {
           TheTimer({

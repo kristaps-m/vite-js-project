@@ -45,9 +45,7 @@ const About = () => {
   function handleCheckBoxChange(e: React.ChangeEvent<HTMLInputElement>) {
     const { name, checked } = e.target; // Extract values properly
     setLocalDBitems((prevItems) =>
-      prevItems.map((item) =>
-        item.localItem === name ? { ...item, toDelete: checked } : item
-      )
+      prevItems.map((item) => (item.localItem === name ? { ...item, toDelete: checked } : item))
     );
   }
 
@@ -61,26 +59,22 @@ const About = () => {
   };
 
   return (
-    <div style={{ marginTop: "25rem" }}>
+    <div>
       <h2>Welcome to about page</h2>
       <p>
         This project is created in year 2025 using{" "}
         <a href="http://vite.dev/guide">vite.dev/guide</a>
       </p>
       <p>
-        It contains simple challeging tasks like "ToDoApp" and "CardMemoryGame".
-        States of these games are saved in browsers localStorage.
+        It contains simple challeging tasks like "ToDoApp" and "CardMemoryGame". States of these
+        games are saved in browsers localStorage.
       </p>
-      <p>
-        You can navigate through components using navigation buttons on top of
-        page.
-      </p>
+      <p>You can navigate through components using navigation buttons on top of page.</p>
       <p>You I included some testing features here in About page.</p>
       <p>
-        You can "Disable Test Mode" or "Enable Test Mode". If enabled it will
-        help you solve Memory game faster. Go check it out :). Also you can
-        clear whats saved in localStorage here in about page. For example you
-        added to many tasks, here you can delete them all at once.
+        You can "Disable Test Mode" or "Enable Test Mode". If enabled it will help you solve Memory
+        game faster. Go check it out :). Also you can clear whats saved in localStorage here in
+        about page. For example you added to many tasks, here you can delete them all at once.
       </p>
       <button
         style={{ backgroundColor: testMode ? "red" : "" }}

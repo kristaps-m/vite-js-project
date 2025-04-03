@@ -5,7 +5,7 @@ import viteLogo from "../../public/vite.svg";
 function Home() {
   const [count, setCount] = useState(0);
   return (
-    <>
+    <div style={{ textAlign: "center" }}>
       <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
@@ -22,7 +22,7 @@ function Home() {
         </p>
       </div>
       <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-    </>
+    </div>
   );
 }
 

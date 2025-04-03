@@ -26,7 +26,6 @@ const Task: React.FC<TaskProps> = ({ task, handleDeleteJob, handleEditJob }) => 
         backgroundColor: task?.status === "done" ? "gray" : "white",
         color: task?.status === "done" ? "white" : "black",
         fontWeight: "bold",
-        // gap: "10px",
         opacity: isDragging ? 0.5 : 1,
         padding: "10px",
         margin: "5px",
