@@ -1,8 +1,28 @@
+### The Project!
+
+I left default ViteJS as Home page <3
+
+<img src="readme_pictures/home_page.jpg" width="500">
+
+To change Task status drag and drop it :)
+
+<img src="readme_pictures/todoapp.jpg" width="500">
+
+If you have not guessed correct pair, it will close after 3 seconds. "Cards" are numbers!
+
+<img src="readme_pictures/card_memory_game.jpg" width="500">
+
+Here you can test the application using "Test mode" (helps solve Memory game faster).You can pick what localStorage data to delete. If you have a lot of `tasks` you can delete all at once from here!
+
+<img src="readme_pictures/about.jpg" width="500">
+
+:exclamation: There also is button for changing Theme from `light` to `dark` <img src="readme_pictures/theme.jpg" width="150">
+
 ### TO DO APP
 
 Drag and Drop - [react-dnd.github.io/react-dnd/](https://react-dnd.github.io/react-dnd/)
 
-# React + TypeScript + Vite
+# React + TypeScript + Vite (I left default ViteJS readme...)
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 

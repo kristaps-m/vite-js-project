@@ -142,9 +142,6 @@ const CardMemoryGame = () => {
         highscore {fieldSize}x{fieldSize}:{" "}
         {new Date(parseInt(highscore) * 1000).toISOString().substring(11, 19)}
       </h5>
-      <p>
-        Selected Size: - {selectedSize} - FieldSize: - {fieldSize} -
-      </p>
       <h3>
         {
           TheTimer({
