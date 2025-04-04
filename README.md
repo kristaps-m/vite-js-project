@@ -1,6 +1,6 @@
 ## Chek it out LIVE:
 
-[https://kristaps-vite-js.vercel.app/](kristaps-vite-js.vercel.app/)
+<a href="https://kristaps-vite-js.vercel.app" target="_blank">https://kristaps-vite-js.vercel.app</a>
 
 ### The Project!
 
