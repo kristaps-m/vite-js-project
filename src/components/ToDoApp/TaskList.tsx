@@ -27,9 +27,13 @@ const TaskList: React.FC<ListProps> = ({
     }),
   }));
 
+  const setDropRef = (node: HTMLDivElement | null) => {
+    if (node) drop(node); // ✅ Ensures the function does not return anything
+  };
+
   return (
     <div
-      ref={drop}
+      ref={setDropRef}
       style={{
         padding: "20px",
         minHeight: "200px",

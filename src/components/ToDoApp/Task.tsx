@@ -16,9 +16,13 @@ const Task: React.FC<TaskProps> = ({ task, handleDeleteJob, handleEditJob }) => 
     }),
   }));
 
+  const setDragRef = (node: HTMLDivElement | null) => {
+    if (node) drag(node); // ✅ Ensures the function does not return anything
+  };
+
   return (
     <div
-      ref={drag}
+      ref={setDragRef}
       style={{
         display: "block",
         textAlign: "center",
