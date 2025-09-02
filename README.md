@@ -26,6 +26,16 @@ Here you can test the application using "Test mode" (helps solve Memory game fas
 
 Drag and Drop - [react-dnd.github.io/react-dnd/](https://react-dnd.github.io/react-dnd/)
 
+# How to start app localy
+
+Get Node JS - https://nodejs.org/en/download
+
+Or Node Version Manager [https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/](https://www.freecodecamp.org/news/node-version-manager-nvm-install-guide/)
+
+0) https://vite.dev/guide/
+1) npm i
+2) npm run dev 
+
 # React + TypeScript + Vite (I left default ViteJS readme...)
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
