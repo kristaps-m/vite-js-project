@@ -27,7 +27,7 @@ export default function Board() {
 
       <div className="board-grid">
         {board.map((row, rowIndex) => {
-          return row.map((cell, colIndex) => {
+          return row.map((_, colIndex) => {
             return <Cell 
                       x={colIndex}
                       y={rowIndex}
