@@ -1,35 +1,31 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 interface CellProps {
 	x: number;
 	y: number;
 	currentPlayer: "X" | "O";
 	setCurrentPlayer: React.Dispatch<React.SetStateAction<"X" | "O">>;
+	setBoard: React.Dispatch<React.SetStateAction<(null | "X" | "O")[][]>>;
+	theGameResult?: null | "X" | "O" | "Draw";
 }
 
-export default function Cell({x: a, y: b, currentPlayer, setCurrentPlayer}: CellProps) {
+export default function Cell({x: a, y: b, currentPlayer, setCurrentPlayer, setBoard, theGameResult}: CellProps) {
 	const [cell, setCell] = useState<"X" | "O" | null>(null);
-	// const [currentPlayer, setCurrentPlayer] = useState<"X" | "O">("X");
-	// console.log(cell);
 	const handleClick = () => {
-		console.log(currentPlayer);
+		if (theGameResult !== null) return;
 		if (cell === null) {
 			setCell(currentPlayer);
 		}
-		//  else if (cell === "X") {
-		// 	setCell("O");
-		// } else {
-		// 	setCell(null);
-		// }
+
+		setBoard(prevBoard => {
+			const newBoard = prevBoard.map(row => row.slice());
+			// const newBoard = [...prevBoard]; // AI tip: This only creates a shallow copy (not sufficient for 2D array) // 
+			newBoard[b][a] = currentPlayer;
+			return newBoard;
+		});
 
 		setCurrentPlayer(currentPlayer === "X" ? "O" : "X");
-		// console.log(cell);
 	};
 
-	// useEffect(() => {
-	// 	console.log("Cell updated:", cell);
-	// }, [cell]);
-
-  // return (<h1 onClick={() =>setCell("X")}>{cell}</h1>);
-  return (<div className="cell"onClick={handleClick} key={`${a}-${b}`}>{cell}</div>);
+  return (<div className="cell"onClick={handleClick}>{cell}</div>);
 }
