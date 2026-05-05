@@ -58,6 +58,8 @@ export default function Canvas() {
       <h1>Canvas</h1>
       {/* <br /> */}
       <canvas id="myCanvas" style={{ border: "solid black 1px" }}></canvas>
+      <br />
+      <p>This is a simple working canvas example with animation.</p>
     </div>
   );
 }
