@@ -21,6 +21,9 @@ function Navbar() {
           <Link to="/TikTakToe">Tik Tak Toe</Link>
         </li>
         <li>
+          <Link to="/Canvas">Canvas</Link>
+        </li>
+        <li>
           <Link to="/About">About</Link>
         </li>
       </ul>

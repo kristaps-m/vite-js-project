@@ -7,6 +7,7 @@ import { useTheme } from "./theme/ThemeContext";
 import CardMemoryGame from "./components/CardMemoryGame/CardMemoryGame";
 import About from "./components/About";
 import TikTakToe from "./components/TikTakToe/TikTakToe";
+import Canvas from "./components/Canvas/Canvas";
 
 function App() {
   const { theme } = useTheme();
@@ -21,6 +22,7 @@ function App() {
             <Route path="/ToDoApp" element={<ToDoApp />} />
             <Route path="/CardMemoryGame" element={<CardMemoryGame />}></Route>
             <Route path="/TikTakToe" element={<TikTakToe />}></Route>
+            <Route path="/Canvas" element={<Canvas />}></Route>
             <Route path="/About" element={<About />}></Route>
           </Routes>
         </div>
